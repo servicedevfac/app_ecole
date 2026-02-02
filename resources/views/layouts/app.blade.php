@@ -215,20 +215,8 @@
                                 </li>
                             </ul>   
                         </li>
-                        <li class="nav-item sidebar-nav-item">
-                            <a href="#" class="nav-link"><i
-                                    class="flaticon-multiple-users-silhouette"></i><span>Classes</span></a>
-                            <ul class="nav sub-group-menu">
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.classe.index') }}" class="nav-link"><i class="fas fa-angle-right"></i>Tous les
-                                        classes</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.classe.create') }}" class="nav-link"><i class="fas fa-angle-right"></i>Ajouter une classe 
-                                        </a>
-                                </li>
-                       
-                            </ul>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.classe.index') }}" class="nav-link"><i class="flaticon-couple"></i><span>Classe</span></a>
                         </li>
 
                         <li class="nav-item sidebar-nav-item">
@@ -320,11 +308,10 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="class-routine.html" class="nav-link"><i class="flaticon-calendar"></i><span>Class
-                                    Routine</span></a>
+                            <a href="{{ route('admin.emploi_du_temps.index') }}" class="nav-link"><i class="flaticon-calendar"></i><span>Emploi du temps</span></a>
                         </li>
                         <li class="nav-item">
-                            <a href="student-attendence.html" class="nav-link"><i
+                            <a href="#" class="nav-link"><i
                                     class="flaticon-checklist"></i><span>Attendence</span></a>
                         </li>
                         <li class="nav-item sidebar-nav-item">

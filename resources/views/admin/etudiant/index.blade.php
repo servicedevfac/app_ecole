@@ -85,7 +85,7 @@
                                         <td>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input">
-                                                <label class="form-check-label">{{$etudiant->matricule}}</label>
+                                                <label class="form-check-label"><a href="{{ route('admin.etudiant.show', $etudiant->id) }}">{{$etudiant->matricule}}</a></label>    
                                             </div>
                                         </td>
                                         <td class="text-center"><img src="{{ asset('storage/' . $etudiant->photo) }}" alt="student" style="width: 50px; height: 50px;"></td>

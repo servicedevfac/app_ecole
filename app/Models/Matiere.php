@@ -21,6 +21,20 @@ class Matiere extends Model
                     ->withPivot('coefficient')
                     ->withTimestamps();
     }
+    public function enseignants()
+    {
+        return $this->belongsToMany(
+                    Enseignant::class,
+                    'enseignant_matiere',
+                    'matiere_id',
+                    'enseignant_id'
+                )
+                    ->withTimestamps();
+    }
+    public function emploi_du_temps()
+    {
+        return $this->hasMany(Emploi_du_temps::class);
+    }
   
 }
 

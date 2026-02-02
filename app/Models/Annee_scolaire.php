@@ -17,6 +17,6 @@ class Annee_scolaire extends Model
     ];
     public static function active()
     {
-        return self::where('status', 'active')->first();
+        return self::where('status', 'actif')->first();
     }
 }

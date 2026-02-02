@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             StudentSeeder::class,
             InscriptionSeeder::class,
             AnneeScolaireSeeder::class,
+            JourSeeder::class,
+            HoraireSeeder::class,
         ]);
     }
 }

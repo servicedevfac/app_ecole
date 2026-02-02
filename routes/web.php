@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\CycleController;
+use App\Http\Controllers\EmploiDuTempsController;
 use App\Http\Controllers\EnseignantController;
 use App\Http\Controllers\InscriptionController;
 use App\Http\Controllers\MatiereController;
@@ -98,6 +99,8 @@ Route::middleware('auth')->group(function () {
     | CYCLES
     |--------------------------------------------------------------------------
     */
+    Route::resource('emploi_du_temps',EmploiDuTempsController::class)->names('admin.emploi_du_temps');
+    //Route::resource('attendences',AttendenceController::class)->names('admin.attendence');
     Route::resource('matieres',MatiereController::class)->names('admin.matiere');
     Route::resource('cycles',CycleController::class)->names('admin.cycle');
     /*

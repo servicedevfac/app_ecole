@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class AffectationsPedagogiquesController extends Controller
 {
     //public function __construct()
-   // {
+    //{
    //     $this->middleware(['auth', 'permission:gerer-affectations']);
    // }
 
@@ -80,6 +80,17 @@ class AffectationsPedagogiquesController extends Controller
             ])->withInput();
         }
 
+        $existe = affectations_pedagogiques::where([
+            'enseignant_id' => $request->enseignant_id,
+            'matiere_id' => $request->matiere_id,
+            'classe_id' => $request->classe_id,
+            'annee_scolaire_id' => $request->annee_scolaire_id,
+        ])->exists();
+
+        if ($existe) {
+            return back()->withErrors('Cette affectation existe déjà.')->withInput();
+        }
+
         affectations_pedagogiques::create($request->all());
 
         return redirect()
@@ -122,19 +133,18 @@ class AffectationsPedagogiquesController extends Controller
             ]);
         }
 
-        try {
-            try {
-            $affectationPedagogique->update($request->all());
-        } catch (\Exception $e) {
-            return back()->withErrors(
-                'Une affectation identique existe déjà.'
-            );
+        $doublon = affectations_pedagogiques::where([
+            'enseignant_id' => $request->enseignant_id,
+            'matiere_id' => $request->matiere_id,
+            'classe_id' => $request->classe_id,
+            'annee_scolaire_id' => $request->annee_scolaire_id,
+        ])->where('id', '!=', $affectationPedagogique->id)->exists();
+
+        if ($doublon) {
+            return back()->withErrors('Une affectation identique existe déjà.')->withInput();
         }
-        } catch (\Exception $e) {
-            return back()->withErrors(
-                'Une affectation identique existe déjà.'
-            );
-        }
+
+        $affectationPedagogique->update($request->all());
 
         return redirect()
             ->route('admin.enseignant.index')
