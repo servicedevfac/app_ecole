@@ -76,4 +76,16 @@ class Student extends Model
             'classe_id'       // Clé étrangère dans Inscription
         );
     }
+    public function notes()
+{
+    return $this->hasMany(Note::class);
+}
+
+public function evaluations()
+{
+    return $this->belongsToMany(Evaluation::class, 'notes')
+                ->withPivot('note')
+                ->withTimestamps();
+}
+
 }

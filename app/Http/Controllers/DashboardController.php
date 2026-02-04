@@ -21,7 +21,6 @@ class DashboardController extends Controller
         $teachers = Enseignant::all();
         $parents = Parents::all();
         $enseignants = Enseignant::count();
-
         return view('dashboard', compact('students','teachers','enseignants','maleStudents','femaleStudents','parents'));
 
     }

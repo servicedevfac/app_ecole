@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Niveau extends Model
 {
-    protected $fillable = ['cycle_id', 'name']; 
+    protected $fillable = ['cycle_id', 'nom']; 
     public function classes()
     {
         return $this->hasMany(Classe::class);

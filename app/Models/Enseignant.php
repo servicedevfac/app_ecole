@@ -20,5 +20,14 @@ class Enseignant extends Model
 
        
     ];
-    
+    public function matieres()
+    {
+        return $this->hasMany(Matiere::class);
+    }
+    public function evaluations()
+    {
+        return $this->hasMany(Evaluation::class, 'enseignant_id');
+    }
+  
+
 }

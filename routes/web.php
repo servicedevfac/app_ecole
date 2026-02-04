@@ -3,6 +3,8 @@
 use App\Http\Controllers\AffectationsPedagogiquesController;
 use App\Http\Controllers\AnneeScolaireController;
 use App\Http\Controllers\AssignematiereController;
+use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ClasseController;
@@ -13,6 +15,8 @@ use App\Http\Controllers\InscriptionController;
 use App\Http\Controllers\MatiereController;
 use App\Http\Controllers\NiveauController;
 use App\Http\Controllers\ParentController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -39,8 +43,8 @@ Route::get('/student-details', function () {
 | ROUTES PROTÉGÉES
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth')->group(function () {
-
+Route::middleware('auth', 'role:administrateur')->group(function () {
+   
     /*
     |--------------------------------------------------------------------------
     | DASHBOARD
@@ -54,7 +58,7 @@ Route::middleware('auth')->group(function () {
     | UTILISATEURS & RBAC (ADMIN)
     |--------------------------------------------------------------------------
     */
-    Route::middleware('role:admin')->group(function () {
+    Route::middleware('role:administrateur')->group(function () {
         Route::get('/users', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
         Route::get('/users/create', [\App\Http\Controllers\UserController::class, 'create'])->name('users.create');
         Route::post('/users', [\App\Http\Controllers\UserController::class, 'store'])->name('users.store');
@@ -158,6 +162,43 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::resource('affectations',AffectationsPedagogiquesController::class)->names('admin.affectation');
+
+    /*
+    |--------------------------------------------------------------------------
+    | EVALUATION
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('evaluations', EvaluationController::class)->names('admin.evaluations');
+
+    /*
+    |--------------------------------------------------------------------------
+    | NOTES
+    |--------------------------------------------------------------------------
+    */
+    // Routes spécifiques pour la saisie des notes d'une évaluation
+    Route::get('/evaluations/{evaluation}/notes', [NoteController::class, 'create'])->name('admin.evaluations.notes.create');
+    Route::post('/evaluations/{evaluation}/notes', [NoteController::class, 'store'])->name('admin.evaluations.notes.store');
+    
+    Route::resource('note', NoteController::class)->names('admin.note');
+    /*
+    |--------------------------------------------------------------------------
+    | ROLES
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('roles',RoleController::class)->names('admin.role');
+    /*
+    |--------------------------------------------------------------------------
+    | UTILISATEURS
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('utilisateurs',UserController::class)->names('admin.user');
+    Route::get('/utilisateurs/{id}/edit', [UserController::class, 'edit'])->name('admin.user.edit');
+    Route::put('/utilisateurs/{id}', [UserController::class, 'update'])->name('admin.user.update');
+    Route::delete('/utilisateurs/{id}', [UserController::class, 'destroy'])->name('admin.user.destroy');
+    Route::get('/utilisateurs/{id}', [UserController::class, 'show'])->name('admin.user.show');
+    Route::get('/utilisateurs', [UserController::class, 'index'])->name('admin.user.index');
+    Route::get('/utilisateurs/create', [UserController::class, 'create'])->name('admin.user.create');
+
  
   
 

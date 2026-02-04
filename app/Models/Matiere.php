@@ -35,7 +35,11 @@ class Matiere extends Model
     {
         return $this->hasMany(Emploi_du_temps::class);
     }
-  
+  public function evaluations()
+{
+    return $this->hasMany(Evaluation::class);
+}
+
 }
 
 

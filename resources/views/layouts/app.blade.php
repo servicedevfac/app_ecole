@@ -314,33 +314,24 @@
                             <a href="#" class="nav-link"><i
                                     class="flaticon-checklist"></i><span>Attendence</span></a>
                         </li>
-                        <li class="nav-item sidebar-nav-item">
-                            <a href="#" class="nav-link"><i class="flaticon-shopping-list"></i><span>Exam</span></a>
-                            <ul class="nav sub-group-menu">
-                                <li class="nav-item">
-                                    <a href="exam-schedule.html" class="nav-link"><i class="fas fa-angle-right"></i>Exam
-                                        Schedule</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="exam-grade.html" class="nav-link"><i class="fas fa-angle-right"></i>Exam
-                                        Grades</a>
-                                </li>
-                            </ul>
-                        </li>
+                      <li class="nav-item">
+                            <a href="{{ route('admin.evaluations.index') }}" class="nav-link"><i
+                                    class="flaticon-shopping-list"></i><span>Evaluation</span></a>
+                        </li> 
                         <li class="nav-item">
-                            <a href="transport.html" class="nav-link"><i
-                                    class="flaticon-bus-side-view"></i><span>Transport</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="hostel.html" class="nav-link"><i class="flaticon-bed"></i><span>Hostel</span></a>
-                        </li>
+                            <a href="{{ route('admin.note.index') }}" class="nav-link"><i class="flaticon-bed"></i><span>Note</span></a>
+                        </li>   
                         <li class="nav-item">
                             <a href="notice-board.html" class="nav-link"><i
                                     class="flaticon-script"></i><span>Notice</span></a>
                         </li>
                         <li class="nav-item">
-                            <a href="messaging.html" class="nav-link"><i
-                                    class="flaticon-chat"></i><span>Messeage</span></a>
+                            <a href="{{ route('admin.role.index') }}" class="nav-link"><i
+                                    class="flaticon-chat"></i><span>Rôles</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.user.index') }}" class="nav-link"><i
+                                    class="flaticon-menu-1"></i><span>Utilisateurs</span></a>
                         </li>
                         <li class="nav-item sidebar-nav-item">
                             <a href="#" class="nav-link"><i class="flaticon-menu-1"></i><span>UI Elements</span></a>
