@@ -9,7 +9,7 @@
             <ul class="d-flex align-items-center p-0" style="list-style: none; font-size: 0.9rem;">
                 <li><a href="{{ route('dashboard') }}" class="text-muted">Tableau de bord</a></li>
                 <li class="mx-2 text-muted">/</li>
-                <li class="text-orange-peel font-bold">Administrateur</li>
+                <li class="text-orange-peel font-bold"> Administrateur</li>
             </ul>
         </div>
         <div class="header-elements">

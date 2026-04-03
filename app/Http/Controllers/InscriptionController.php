@@ -27,8 +27,8 @@ class InscriptionController extends Controller
             $search = $request->search;
             $query->whereHas('student', function ($q) use ($search) {
                 $q->where('nom', 'like', "%{$search}%")
-                  ->orWhere('prenom', 'like', "%{$search}%")
-                  ->orWhere('matricule', 'like', "%{$search}%");
+                    ->orWhere('prenom', 'like', "%{$search}%")
+                    ->orWhere('matricule', 'like', "%{$search}%");
             });
         }
 
@@ -45,7 +45,7 @@ class InscriptionController extends Controller
     public function create(Request $request)
     {
         $annees = Annee_scolaire::where('status', 'actif')->get();
-        $etudiants = Student::all();
+        $etudiants = Student::doesntHave('inscriptions')->get();
         $cycles = Cycle::all();
         $niveaux = Niveau::all();
         $classes = Classe::all();

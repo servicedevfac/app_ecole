@@ -52,14 +52,28 @@
                                         <option value="F" {{ old('sexe')=='F' ? 'selected' : '' }}>Féminin</option>
                                     </select>
                                 </div>
+                                <div class="col-12 mt-4">
+                                    <h4>Informations Parent (Nouveau ou Existant)</h4>
+                                </div>
                                 <div class="col-xl-3 col-lg-6 col-12 form-group">
-                                    <label>Parent *</label>
-                                    <select name="parent_id" class="select2" required>
-                                        <option value="">Sélectionner un parent *</option>
-                                        @foreach($parents as $parent)
-                                            <option value="{{ $parent->id }}" {{ old('parent_id')==$parent->id ? 'selected' : '' }}>{{ $parent->nom }} {{ $parent->prenom }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label>Nom du parent *</label>
+                                    <input name="parent_nom" type="text" class="form-control" value="{{ old('parent_nom') }}" required>
+                                </div>
+                                <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                    <label>Prénom(s) parent *</label>
+                                    <input name="parent_prenom" type="text" class="form-control" value="{{ old('parent_prenom') }}" required>
+                                </div>
+                                <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                    <label>Téléphone parent *</label>
+                                    <input name="parent_telephone" type="text" class="form-control" value="{{ old('parent_telephone') }}" required>
+                                </div>
+                                <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                    <label>Email parent</label>
+                                    <input name="parent_email" type="email" class="form-control" value="{{ old('parent_email') }}">
+                                </div>
+                                <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                    <label>Adresse parent *</label>
+                                    <input name="parent_adresse" type="text" class="form-control" value="{{ old('parent_adresse') }}" required>
                                 </div>
                                 <div class="col-xl-3 col-lg-6 col-12 form-group">
                                     <label>Relation *</label>

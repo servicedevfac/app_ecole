@@ -34,7 +34,9 @@ class BulletinService
         if ($periode) {
             $query->where('periode_id', $periode->id);
         } else {
-            $query->whereBetween('date_evaluation', [$annee->date_debut, $annee->date_fin]);
+            $query->whereHas('periode', function ($q) use ($annee) {
+                $q->where('annee_scolaire_id', $annee->id);
+            });
         }
 
         $evaluations = $query->with(['notes'])->get();

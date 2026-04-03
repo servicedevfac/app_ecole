@@ -36,7 +36,12 @@ class StudentRequest extends FormRequest
             'phone' => 'required|string|regex:/^[\+]?[0-9\-\(\)\s]+$/|max:20',
             'sexe' => 'required|in:M,F,Homme,Femme',
             'address' => 'required|string|max:500',
-            'parent_id' => 'required|exists:parents,id',
+            'parent_id' => 'nullable|exists:parents,id',
+            'parent_nom' => 'required_without:parent_id|string|max:255',
+            'parent_prenom' => 'required_without:parent_id|string|max:255',
+            'parent_telephone' => 'required_without:parent_id|string|max:20',
+            'parent_email' => 'nullable|email|max:255',
+            'parent_adresse' => 'required_without:parent_id|string|max:255',
             'relation' => 'required|in:mere,pere,frere,soeur,tuteur',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];

@@ -6,6 +6,7 @@ use App\Models\Classe;
 use App\Models\Facture;
 use App\Models\Inscription;
 use App\Models\Student;
+use DB;
 use Illuminate\Http\Request;
 use App\Http\Requests\StudentRequest;
 
@@ -66,8 +67,10 @@ class StudentController extends Controller
      */
     public function store(StudentRequest $request)
     {
+        try {
+            DB::beginTransaction();
         $etudiant = Student::create(
-            $request->except('photo', 'parent_id', 'relation')
+            $request->except('photo', 'parent_id', 'parent_nom', 'parent_prenom', 'parent_telephone', 'parent_email', 'parent_adresse', 'relation')
         );
 
         // 2️⃣ photo
@@ -77,11 +80,34 @@ class StudentController extends Controller
         }
 
         // 3️⃣ relation parent
-        $etudiant->parents()->attach($request->parent_id, [
+        if ($request->filled('parent_id')) {
+            $parentId = $request->parent_id;
+        } else {
+            $parent = \App\Models\Parents::where('telephone', $request->parent_telephone)->first();
+            
+            if (!$parent && $request->filled('parent_email')) {
+                $parent = \App\Models\Parents::where('email', $request->parent_email)->first();
+            }
+
+            if (!$parent) {
+                $parent = \App\Models\Parents::create([
+                    'nom' => $request->parent_nom,
+                    'prenom' => $request->parent_prenom,
+                    'telephone' => $request->parent_telephone,
+                    'email' => $request->parent_email,
+                    'adresse' => $request->parent_adresse,
+                ]);
+            }
+            $parentId = $parent->id;
+        }   $etudiant->parents()->attach($parentId, [
             'relation' => $request->relation,
         ]);
 
-
+        DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Erreur lors de l\'ajout de l\'élève'. $e->getMessage());
+        }
         return redirect()->route('admin.etudiant.index')->with('success', 'Eleve ajoute avec succes');
     }
 
