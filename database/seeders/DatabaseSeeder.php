@@ -8,13 +8,12 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
+        // 1. Toujours exécuter les données système essentielles
         $this->call([
             RoleSeeder::class,
             PermissionSeeder::class,

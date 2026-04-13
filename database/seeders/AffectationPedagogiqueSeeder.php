@@ -15,7 +15,7 @@ class AffectationPedagogiqueSeeder extends Seeder
         $enseignants = \App\Models\Enseignant::all();
         $matieres = \App\Models\Matiere::all();
         $classes = \App\Models\Classe::all();
-        $anneeScolaire = \App\Models\Annee_scolaire::where('status', 'active')->first();
+        $anneeScolaire = \App\Models\Annee_scolaire::where('status', 'actif')->first();
 
         if (!$anneeScolaire) return;
 
@@ -29,6 +29,14 @@ class AffectationPedagogiqueSeeder extends Seeder
                     'classe_id' => $classe->id,
                     'annee_scolaire_id' => $anneeScolaire->id,
                 ]);
+
+                // S'assurer que la matière est liée à la classe avec un coefficient pour les bulletins
+                if (!$classe->matieres()->where('matiere_id', $matiere->id)->exists()) {
+                    $classe->matieres()->attach($matiere->id, [
+                        'coefficient' => rand(2, 5),
+                        'ecole_id' => $classe->ecole_id
+                    ]);
+                }
             }
         }
     }

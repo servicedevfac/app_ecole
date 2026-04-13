@@ -14,7 +14,7 @@ class InscriptionSeeder extends Seeder
     {
         $students = \App\Models\Student::all();
         $classes = \App\Models\Classe::all();
-        $anneeScolaire = \App\Models\Annee_scolaire::where('status', 'active')->first();
+        $anneeScolaire = \App\Models\Annee_scolaire::where('status', 'actif')->first();
 
         if (!$anneeScolaire) return;
 

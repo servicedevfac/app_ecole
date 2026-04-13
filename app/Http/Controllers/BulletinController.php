@@ -25,14 +25,22 @@ class BulletinController extends Controller
     {
         $classes = Classe::all();
         $selected_annee_id = $request->query('annee_scolaire_id');
+        $annee = null;
         
         if ($selected_annee_id) {
             $annee = Annee_scolaire::findOrFail($selected_annee_id);
-        } else {
-            $annee = Annee_scolaire::active();
         }
 
         $annees = Annee_scolaire::orderBy('date_debut', 'desc')->get();
+
+        if (!$annee && $annees->count() > 0) {
+            $annee = $annees->first();
+        }
+
+        if (!$annee) {
+            return back()->with('error', 'Aucune année scolaire trouvée. Veuillez en créer une première.');
+        }
+
         $periodes = $annee ? $annee->periodes : collect();
         $selected_periode_id = $request->query('periode_id');
         

@@ -16,7 +16,7 @@ class AnneeScolaireSeeder extends Seeder
             'annee' => '2025-2026',
             'date_debut' => '2025-09-01',
             'date_fin' => '2026-06-30',
-            'status' => 'active'
+            'status' => 'actif'
         ]);
     }
 }
