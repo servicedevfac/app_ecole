@@ -21,7 +21,7 @@ class AnneeScolaireFactory extends Factory
             'annee' => $year . '-' . ($year + 1),
             'date_debut' => $year . '-09-01',
             'date_fin' => ($year + 1) . '-06-30',
-            'status' => 'active',
+            'status' => 'actif',
         ];
     }
 }

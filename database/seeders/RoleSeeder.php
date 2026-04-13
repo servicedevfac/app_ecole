@@ -9,12 +9,9 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        if (\Spatie\Permission\Models\Role::count() > 0) {
-            return;
-        }
-
         $roles = [
             'Super Admin',
+            'admin',
             'enseignant',
             'etudiant',
             'parent',
@@ -22,7 +19,7 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($roles as $name) {
-            \Spatie\Permission\Models\Role::create([
+            \Spatie\Permission\Models\Role::firstOrCreate([
                 'name' => $name,
                 'guard_name' => 'web',
             ]);

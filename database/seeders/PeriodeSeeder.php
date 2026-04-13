@@ -12,7 +12,7 @@ class PeriodeSeeder extends Seeder
      */
     public function run(): void
     {
-        $anneeScolaire = \App\Models\Annee_scolaire::where('status', 'active')->first();
+        $anneeScolaire = \App\Models\Annee_scolaire::where('status', 'actif')->first();
         if (!$anneeScolaire) return;
 
         $periodes = [
