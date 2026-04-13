@@ -46,7 +46,7 @@ Route::get('/student-details', function () {
 | ROUTES PROTÉGÉES
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff')->group(function () {
+Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff|parent|Comptable')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff')->group(func
     | ÉLÈVES (STUDENTS)
     |--------------------------------------------------------------------------
     */
-    Route::prefix('students')->group(function () {
+    Route::prefix('students')->middleware('permission:etudiants.view')->group(function () {
         Route::get('/', [StudentController::class, 'index'])->name('admin.etudiant.index');
         Route::get('/create', [StudentController::class, 'create'])->name('admin.etudiant.create');
         Route::post('/', [StudentController::class, 'store'])->name('admin.etudiant.store');
@@ -90,7 +90,7 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff')->group(func
     | CLASSES
     |--------------------------------------------------------------------------
     */
-    Route::resource('classes', ClasseController::class)->names('admin.classe');
+    Route::resource('classes', ClasseController::class)->names('admin.classe')->middleware('permission:classes.view');
 
     /*
     |--------------------------------------------------------------------------
@@ -165,7 +165,7 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff')->group(func
     | EVALUATION
     |--------------------------------------------------------------------------
     */
-    Route::resource('evaluations', EvaluationController::class)->names('admin.evaluations');
+    Route::resource('evaluations', EvaluationController::class)->names('admin.evaluations')->middleware('permission:notes.view');
     Route::get('/ecoles/settings', [EcoleController::class, 'settings'])->name('admin.ecole.settings');
     Route::put('/ecoles/settings/{ecole}', [EcoleController::class, 'update'])->name('admin.ecole.update_settings');
 
@@ -190,7 +190,7 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff')->group(func
     Route::get('/bulletins/{classe}', [\App\Http\Controllers\BulletinController::class, 'generate'])->name('admin.bulletins.generate');
     Route::get('/bulletins/{classe}/student/{student}', [\App\Http\Controllers\BulletinController::class, 'studentBulletin'])->name('admin.bulletins.student');
     Route::get('/bulletins/{classe}/student/{student}/pdf', [\App\Http\Controllers\BulletinController::class, 'downloadPDF'])->name('admin.bulletins.download_pdf');
-    Route::resource('factures', \App\Http\Controllers\FactureController::class)->names('admin.factures');
+    Route::resource('factures', \App\Http\Controllers\FactureController::class)->names('admin.factures')->middleware('permission:paiements.view');
 
     // PDF Timetable Routes
     Route::get('/emploi_du_temps/classe/{id}/pdf', [\App\Http\Controllers\EmploiDuTempsController::class, 'downloadPDFByClasse'])->name('admin.emploi_du_temps.classe_pdf');
@@ -209,6 +209,8 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff')->group(func
     */
     Route::middleware('role:Super Admin')->group(function () {
         Route::resource('roles', RoleController::class)->names('admin.role');
+        Route::get('roles/{role}/permissions', [RoleController::class, 'permissions'])->name('admin.role.permissions');
+        Route::post('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('admin.role.update_permissions');
         Route::resource('ecoles', EcoleController::class)->names('admin.ecole');
         Route::resource('ecole-payments', \App\Http\Controllers\EcolePaymentController::class)->names('admin.ecole_payments');
     });

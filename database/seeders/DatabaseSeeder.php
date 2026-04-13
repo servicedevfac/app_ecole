@@ -15,30 +15,32 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Toujours exécuter les données système essentielles
         $this->call([
-            SystemSeeder::class,
+            RoleSeeder::class,
+            PermissionSeeder::class,
+            CycleSeeder::class,
+            NiveauSeeder::class,
+            ClasseSeeder::class,
+            AnneeScolaireSeeder::class,
+            ParentsSeeder::class,
+            RelationSeeder::class,
+            StudentSeeder::class,
+            InscriptionSeeder::class,
+            MatiereSeeder::class,
+            EnseignantSeeder::class,
+            AffectationPedagogiqueSeeder::class,
+            PeriodeSeeder::class,
+            EvaluationSeeder::class,
+            JourSeeder::class,
+            HoraireSeeder::class,
         ]);
 
-        // 2. Initialiser le TenantManager pour les données de test (si une école existe)
-        $ecole = \App\Models\Ecole::first();
-        if ($ecole) {
-            \App\Tenant\TenantManager::setEcoleId($ecole->id);
-        }
-
-        // 3. Exécuter les données de test uniquement en local ou si spécifié
-        if (config('app.env') !== 'production' || env('SEED_TEST_DATA', false)) {
-            $this->command->info('Seeding test data...');
-            
-            $this->call([
-                ClasseSeeder::class,
-                ParentsSeeder::class,
-                RelationSeeder::class,
-                StudentSeeder::class,
-                InscriptionSeeder::class,
-                EnseignantSeeder::class,
-                AffectationPedagogiqueSeeder::class,
-                PeriodeSeeder::class,
-                EvaluationSeeder::class,
-            ]);
-        }
+        // Créer un utilisateur administrateur de test
+        $admin = \App\Models\User::firstOrCreate([
+            'email' => 'admin@admin.com',
+        ], [
+            'name' => 'Admin Test',
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+        ]);
+        $admin->assignRole('Super Admin');
     }
 }

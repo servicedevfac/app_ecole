@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Facture;
 use App\Models\Facture_lignes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class FactureController extends Controller
 {
@@ -13,6 +14,7 @@ class FactureController extends Controller
      */
     public function index()
     {
+        Gate::authorize('paiements.view');
         $factures = Facture::with(['inscription.student', 'inscription.classe'])->orderBy('created_at', 'desc')->get();
         return view('admin.factures.index', compact('factures'));
     }
@@ -38,6 +40,7 @@ class FactureController extends Controller
      */
     public function show(Facture $facture)
     {
+        Gate::authorize('paiements.view');
         $facture->load(['inscription.student', 'inscription.classe', 'lines', 'payments']);
         return view('admin.factures.show', compact('facture'));
     }

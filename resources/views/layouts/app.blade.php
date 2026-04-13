@@ -1,6 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="">
-
+<html class="no-js" lang=""> 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -73,8 +72,8 @@
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
-             <div class="header-main-menu collapse navbar-collapse justify-content-end" id="mobile-navbar"  >
-             
+            <div class="header-main-menu collapse navbar-collapse justify-content-end" id="mobile-navbar">
+
                 <ul class="navbar-nav">
                     <li class="navbar-item dropdown header-admin">
                         <a class="navbar-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
@@ -99,14 +98,17 @@
                                                 class="flaticon-chat-comment-oval-speech-bubble-with-text-lines"></i>Message</a>
                                     </li>
                                     @if(auth()->user()->hasRole('Super Admin'))
-                                    <li><a href="{{ route('admin.user.edit', Auth::user()->id) }}"><i class="flaticon-gear-loading"></i>Paramètres du compte</a></li>
+                                        <li><a href="{{ route('admin.user.edit', Auth::user()->id) }}"><i
+                                                    class="flaticon-gear-loading"></i>Paramètres du compte</a></li>
                                     @endif
-                                    
-                                    <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+
+                                    <form id="logout-form" method="POST" action="{{ route('logout') }}"
+                                        style="display: none;">
                                         @csrf
                                     </form>
                                     <li>
-                                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <a href="{{ route('logout') }}"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                             <i class="flaticon-turn-off"></i>Se déconnecter
                                         </a>
                                     </li>
@@ -115,7 +117,7 @@
                         </div>
                     </li>
                 </ul>
-            </div> 
+            </div>
         </div>
         <!-- Header Menu Area End Here -->
         <!-- Page Area Start Here -->
@@ -130,118 +132,161 @@
                 <div class="sidebar-menu-content">
                     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
                         @role('Super Admin')
-                        {{-- MENU SUPER ADMIN --}}
-                        <li class="nav-item text-muted px-3 mt-3 mb-1" style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;">
-                            Architecture Plateforme
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link"><i class="fas fa-chart-line"></i><span>Monitoring Global</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.ecole.index') }}" class="nav-link"><i class="fas fa-school"></i><span>Gestion Écoles</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.ecole_payments.index') }}" class="nav-link"><i class="fas fa-file-invoice-dollar"></i><span>Paiements Écoles</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.role.index') }}" class="nav-link"><i class="fas fa-user-shield"></i><span>Rôles & Permissions</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.user.index') }}" class="nav-link"><i class="fas fa-users-cog"></i><span>Utilisateurs Globaux</span></a>
-                        </li>
-                        @elserole('enseignant')
+                        @can('utilisateurs.view')
+                            <li class="nav-item text-muted px-3 mt-3 mb-1"
+                                style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;">
+                                Architecture Plateforme
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('dashboard') }}" class="nav-link"><i
+                                        class="fas fa-chart-line"></i><span>Monitoring Global</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.ecole.index') }}" class="nav-link"><i
+                                        class="fas fa-school"></i><span>Gestion Écoles</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.ecole_payments.index') }}" class="nav-link"><i
+                                        class="fas fa-file-invoice-dollar"></i><span>Paiements Écoles</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.role.index') }}" class="nav-link"><i
+                                        class="fas fa-user-shield"></i><span>Rôles & Permissions</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.user.index') }}" class="nav-link"><i
+                                        class="fas fa-users-cog"></i><span>Utilisateurs Globaux</span></a>
+                            </li>
+                        @endcan
+                        @endrole
+
+                        @role('enseignant')
                         {{-- MENU ENSEIGNANT --}}
                         <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link"><i class="flaticon-calendar"></i><span>Tableau de bord</span></a>
+                            <a href="{{ route('dashboard') }}" class="nav-link"><i
+                                    class="flaticon-calendar"></i><span>Tableau de bord</span></a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.emploi_du_temps.index') }}" class="nav-link"><i class="flaticon-calendar"></i><span>Mon Emploi du temps</span></a>
+                            <a href="{{ route('admin.emploi_du_temps.index') }}" class="nav-link"><i
+                                    class="flaticon-calendar"></i><span>Mon Emploi du temps</span></a>
                         </li>
                         <li class="nav-item sidebar-nav-item">
-                            <a href="#" class="nav-link"><i class="flaticon-shopping-list"></i><span>Mes Évaluations</span></a>
+                            <a href="#" class="nav-link"><i class="flaticon-shopping-list"></i><span>Mes
+                                    Évaluations</span></a>
                             <ul class="nav sub-group-menu">
                                 <li class="nav-item">
-                                    <a href="{{ route('admin.evaluations.index') }}" class="nav-link"><i class="fas fa-angle-right"></i>Toutes les évaluations</a>
+                                    <a href="{{ route('admin.evaluations.index') }}" class="nav-link"><i
+                                            class="fas fa-angle-right"></i>Toutes les évaluations</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('admin.evaluations.create') }}" class="nav-link"><i class="fas fa-angle-right"></i>Créer une évaluation</a>
+                                    <a href="{{ route('admin.evaluations.create') }}" class="nav-link"><i
+                                            class="fas fa-angle-right"></i>Créer une évaluation</a>
                                 </li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.bulletins.index') }}" class="nav-link"><i class="flaticon-script"></i><span>Bulletins & Notes</span></a>
-                        </li>
-                        @else
-                        {{-- MENU SCOLAIRE (ADMIN ÉCOLE & STAFF) --}}
-                        <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link"><i class="flaticon-calendar"></i><span>Tableau de bord</span></a>
-                        </li>
-                        <li class="nav-item sidebar-nav-item">
-                            <a href="#" class="nav-link"><i class="flaticon-classmates"></i><span>Élèves</span></a>
-                            <ul class="nav sub-group-menu">
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.etudiant.index') }}" class="nav-link"><i class="fas fa-angle-right"></i>Gestion / Inscriptions</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.etudiant.create') }}" class="nav-link"><i class="fas fa-angle-right"></i>Ajouter un élève</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item sidebar-nav-item">
-                            <a href="#" class="nav-link"><i class="flaticon-multiple-users-silhouette"></i><span>Enseignants</span></a>
-                            <ul class="nav sub-group-menu">
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.enseignant.index') }}" class="nav-link"><i class="fas fa-angle-right"></i>Tous les enseignants</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.enseignant.create') }}" class="nav-link"><i class="fas fa-angle-right"></i>Ajouter un enseignant</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.affectation.create') }}" class="nav-link"><i class="fas fa-angle-right"></i>Affecter à une classe</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item sidebar-nav-item">
-                            <a href="#" class="nav-link"><i class="flaticon-technological"></i><span>Parents</span></a>
-                            <ul class="nav sub-group-menu">
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.parent.index') }}" class="nav-link"><i class="fas fa-angle-right"></i>Tous les parents</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.parent.create') }}" class="nav-link"><i class="fas fa-angle-right"></i>Ajouter un parent</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.emploi_du_temps.index') }}" class="nav-link"><i class="flaticon-calendar"></i><span>Emploi du temps</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.evaluations.index') }}" class="nav-link"><i class="flaticon-shopping-list"></i><span>Évaluations</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.bulletins.index') }}" class="nav-link"><i class="flaticon-script"></i><span>Bulletins</span></a>
-                        </li>
-                        <li class="nav-item sidebar-nav-item">
-                            <a href="#" class="nav-link"><i class="flaticon-technological"></i><span>Comptabilité</span></a>
-                            <ul class="nav sub-group-menu">
-                                <li class="nav-item">
-                                    <a href="{{ route('admin.factures.index') }}" class="nav-link"><i class="fas fa-angle-right"></i>Factures & Paiements</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('frais_scolaires.index') }}" class="nav-link"><i class="fas fa-angle-right"></i>Configuration Frais</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.user.index') }}" class="nav-link"><i class="fas fa-users"></i><span>Utilisateurs</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.ecole.settings') }}" class="nav-link"><i class="fas fa-school"></i><span>Paramètres de l'école</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('parametres_scolaires') }}" class="nav-link"><i class="fas fa-cogs"></i><span>Calendrier & Périodes</span></a>
+                            <a href="{{ route('admin.bulletins.index') }}" class="nav-link"><i
+                                    class="flaticon-script"></i><span>Bulletins & Notes</span></a>
                         </li>
                         @endrole
+
+                        @if(!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('enseignant'))
+                            {{-- MENU SCOLAIRE (ADMIN ÉCOLE & STAFF) --}}
+                            <li class="nav-item">
+                                <a href="{{ route('dashboard') }}" class="nav-link"><i
+                                        class="flaticon-calendar"></i><span>Tableau de bord</span></a>
+                            </li>
+                            @can('etudiants.view')
+                                <li class="nav-item sidebar-nav-item">
+                                    <a href="#" class="nav-link"><i class="flaticon-classmates"></i><span>Élèves</span></a>
+                                    <ul class="nav sub-group-menu">
+                                        <li class="nav-item">
+                                            <a href="{{ route('admin.etudiant.index') }}" class="nav-link"><i
+                                                    class="fas fa-angle-right"></i>Gestion / Inscriptions</a>
+                                        </li>
+                                        @can('etudiants.create')
+                                            <li class="nav-item">
+                                                <a href="{{ route('admin.etudiant.create') }}" class="nav-link"><i
+                                                        class="fas fa-angle-right"></i>Ajouter un élève</a>
+                                            </li>
+                                        @endcan
+                                    </ul>
+                                </li>
+                            @endcan
+                            @role('staff|admin')
+                            <li class="nav-item sidebar-nav-item">
+                                <a href="#" class="nav-link"><i
+                                        class="flaticon-multiple-users-silhouette"></i><span>Enseignants</span></a>
+                                <ul class="nav sub-group-menu">
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.enseignant.index') }}" class="nav-link"><i
+                                                class="fas fa-angle-right"></i>Tous les enseignants</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.enseignant.create') }}" class="nav-link"><i
+                                                class="fas fa-angle-right"></i>Ajouter un enseignant</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.affectation.create') }}" class="nav-link"><i
+                                                class="fas fa-angle-right"></i>Affecter à une classe</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item sidebar-nav-item">
+                                <a href="#" class="nav-link"><i class="flaticon-technological"></i><span>Parents</span></a>
+                                <ul class="nav sub-group-menu">
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.parent.index') }}" class="nav-link"><i
+                                                class="fas fa-angle-right"></i>Tous les parents</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.parent.create') }}" class="nav-link"><i
+                                                class="fas fa-angle-right"></i>Ajouter un parent</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            @endrole
+                            <li class="nav-item">
+                                <a href="{{ route('admin.emploi_du_temps.index') }}" class="nav-link"><i
+                                        class="flaticon-calendar"></i><span>Emploi du temps</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.evaluations.index') }}" class="nav-link"><i
+                                        class="flaticon-shopping-list"></i><span>Évaluations</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.bulletins.index') }}" class="nav-link"><i
+                                        class="flaticon-script"></i><span>Bulletins</span></a>
+                            </li>
+                            @can('paiements.view')
+                                <li class="nav-item sidebar-nav-item">
+                                    <a href="#" class="nav-link"><i
+                                            class="flaticon-technological"></i><span>Comptabilité</span></a>
+                                    <ul class="nav sub-group-menu">
+                                        <li class="nav-item">
+                                            <a href="{{ route('admin.factures.index') }}" class="nav-link"><i
+                                                    class="fas fa-angle-right"></i>Factures & Paiements</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('frais_scolaires.index') }}" class="nav-link"><i
+                                                    class="fas fa-angle-right"></i>Configuration Frais</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endcan
+                            <li class="nav-item">
+                                <a href="{{ route('admin.user.index') }}" class="nav-link"><i
+                                        class="fas fa-users"></i><span>Utilisateurs</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.ecole.settings') }}" class="nav-link"><i
+                                        class="fas fa-school"></i><span>Paramètres de l'école</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('parametres_scolaires') }}" class="nav-link"><i
+                                        class="fas fa-cogs"></i><span>Calendrier & Périodes</span></a>
+                            </li>
+                        @endif
                         <!-- <li class="nav-item sidebar-nav-item">
                             <a href="#" class="nav-link"><i class="flaticon-menu-1"></i><span>UI Elements</span></a>
                             <ul class="nav sub-group-menu">
