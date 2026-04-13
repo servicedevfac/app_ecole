@@ -11,8 +11,8 @@ function run($command) {
 
 echo "--- Démarrage du déploiement ---\n";
 
-// 1. Mise à jour des dépendances si nécessaire (via SSH normalement)
-// run('composer install --no-dev --optimize-autoloader');
+// 1. Mise à jour des dépendances
+run('composer install --no-dev --optimize-autoloader');
 
 // 2. Migration de la base de données
 run('php artisan migrate --force');
