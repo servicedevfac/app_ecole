@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
+            PermissionSeeder::class,
             CycleSeeder::class,
             NiveauSeeder::class,
             ClasseSeeder::class,
@@ -41,6 +42,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin Test',
             'password' => \Illuminate\Support\Facades\Hash::make('password'),
         ]);
-        $admin->assignRole('admin');
+        $admin->assignRole('Super Admin');
     }
 }

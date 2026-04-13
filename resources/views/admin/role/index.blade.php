@@ -23,16 +23,13 @@
                             <div class="item-title">
                                 <h3>Tous les rôles</h3>
                             </div>
-                           <div class="dropdown">
-                                <a class="dropdown-toggle" href="#" role="button" 
-                                data-toggle="dropdown" aria-expanded="false">...</a>
-        
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="#"><i class="fas fa-times text-orange-red "></i>Close</a>
-                                    <a class="dropdown-item" href="#"><i class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                                    <a class="dropdown-item" href="#"><i class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
-                                </div>
+                            @can('utilisateurs.create')
+                            <div class="dropdown">
+                                <a href="{{ route('admin.role.create') }}" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark text-white">
+                                    <i class="fas fa-plus mr-2"></i> Ajouter un rôle
+                                </a>
                             </div>
+                            @endcan
                         </div>
                         <form class="mg-b-20">
                             <div class="row gutters-8">
@@ -81,7 +78,11 @@
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     <a class="dropdown-item" href="{{ route('admin.role.show', $role->id) }}"><i class="fas fa-eye text-blue"></i>Voir</a>
+                                                    @can('utilisateurs.update')
+                                                    <a class="dropdown-item" href="{{ route('admin.role.permissions', $role->id) }}"><i class="fas fa-key text-orange-peel"></i>Permissions</a>
                                                     <a class="dropdown-item" href="{{ route('admin.role.edit', $role->id) }}"><i class="fas fa-edit text-green"></i>Modifier</a>
+                                                    @endcan
+                                                    @can('utilisateurs.delete')
                                                     <form action="{{ route('admin.role.destroy', $role->id) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
@@ -89,6 +90,7 @@
                                                             <i class="fas fa-trash text-red"></i>Supprimer
                                                         </button>
                                                     </form>
+                                                    @endcan
                                                 </div>
                                             </div>
                                         </td>

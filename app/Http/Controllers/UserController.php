@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -16,6 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        Gate::authorize('utilisateurs.view');
         $query = User::with('ecole');
 
         if (auth()->check() && !auth()->user()->hasRole('Super Admin')) {
@@ -31,6 +33,7 @@ class UserController extends Controller
      */
     public function create()
     {
+        Gate::authorize('utilisateurs.create');
         if (auth()->user()->hasRole('Super Admin')) {
             $roles = Role::all();
         } else {
@@ -49,6 +52,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('utilisateurs.create');
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -89,6 +93,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
+        Gate::authorize('utilisateurs.view');
         $query = User::with('ecole');
 
         if (auth()->check() && !auth()->user()->hasRole('Super Admin')) {
@@ -104,6 +109,7 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
+        Gate::authorize('utilisateurs.update');
         $roles = Role::all();
         $ecoles = Ecole::all();
 
@@ -121,6 +127,7 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        Gate::authorize('utilisateurs.update');
         $query = User::query();
         if (auth()->check() && !auth()->user()->hasRole('Super Admin')) {
             $query->where('ecole_id', auth()->user()->ecole_id);
@@ -162,6 +169,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
+        Gate::authorize('utilisateurs.delete');
         $query = User::query();
         if (auth()->check() && !auth()->user()->hasRole('Super Admin')) {
             $query->where('ecole_id', auth()->user()->ecole_id);

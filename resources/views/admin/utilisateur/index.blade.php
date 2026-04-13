@@ -72,11 +72,13 @@
                 <div class="item-title">
                     <h3 style="font-weight: 700; color: #2d3748;">Liste des Utilisateurs</h3>
                 </div>
+                @can('utilisateurs.create')
                 <div>
                     <a href="{{ route('admin.user.create') }}" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark shadow-sm" style="border-radius: 10px; font-weight: 600;">
                         <i class="fas fa-plus mg-r-8"></i> Créer un utilisateur
                     </a>
                 </div>
+                @endcan
             </div>
 
             <div class="table-responsive">
@@ -128,9 +130,12 @@
                                         <a class="dropdown-item" href="{{ route('admin.user.show', $user->id) }}" style="border-radius: 8px; padding: 8px 15px; font-size: 14px;">
                                             <i class="fas fa-eye text-primary mg-r-10"></i> Voir
                                         </a>
+                                        @can('utilisateurs.update')
                                         <a class="dropdown-item" href="{{ route('admin.user.edit', $user->id) }}" style="border-radius: 8px; padding: 8px 15px; font-size: 14px;">
                                             <i class="fas fa-edit text-success mg-r-10"></i> Modifier
                                         </a>
+                                        @endcan
+                                        @can('utilisateurs.delete')
                                         <div class="dropdown-divider"></div>
                                         <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" style="margin: 0;">
                                             @csrf
@@ -139,6 +144,7 @@
                                                 <i class="fas fa-trash-alt mg-r-10"></i> Supprimer
                                             </button>
                                         </form>
+                                        @endcan
                                     </div>
                                 </div>
                             </td>

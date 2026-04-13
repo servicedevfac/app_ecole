@@ -10,6 +10,8 @@ use DB;
 use Illuminate\Http\Request;
 use App\Http\Requests\StudentRequest;
 
+use Illuminate\Support\Facades\Gate;
+
 class StudentController extends Controller
 {
     /**
@@ -17,6 +19,7 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
+        Gate::authorize('etudiants.view');
         $activeAnnee = \App\Models\Annee_scolaire::where('status', 'actif')->first();
         
         $query = Student::with(['parents', 'inscriptions' => function($q) use ($activeAnnee) {
@@ -58,6 +61,7 @@ class StudentController extends Controller
      */
     public function create()
     {
+        Gate::authorize('etudiants.create');
         $parents = \App\Models\Parents::all();
         return view('admin.etudiant.create', compact('parents'));
     }
@@ -67,6 +71,7 @@ class StudentController extends Controller
      */
     public function store(StudentRequest $request)
     {
+        Gate::authorize('etudiants.create');
         try {
             DB::beginTransaction();
         $etudiant = Student::create(
@@ -116,6 +121,7 @@ class StudentController extends Controller
      */
     public function show(string $id)
     {
+        Gate::authorize('etudiants.view');
         // ✅ 1️⃣ récupérer l'étudiant existant
 
 
@@ -146,6 +152,7 @@ class StudentController extends Controller
      */
     public function edit(string $id)
     {
+        Gate::authorize('etudiants.update');
         $etudiant = Student::findOrFail($id);
         $parents = \App\Models\Parents::all();
         return view('admin.etudiant.edit', compact('etudiant', 'parents'));
@@ -153,6 +160,7 @@ class StudentController extends Controller
 
     public function update(StudentRequest $request, string $id)
     {
+        Gate::authorize('etudiants.update');
 
         // ✅ 1️⃣ récupérer l'étudiant existant
         $etudiant = Student::findOrFail($id);
@@ -216,6 +224,7 @@ class StudentController extends Controller
      */
     public function destroy(string $id)
     {
+        Gate::authorize('etudiants.delete');
         $etudiant = Student::findOrFail($id);
         $etudiant->delete();
 

@@ -133,6 +133,7 @@
                     <h3>Tous les élèves</h3>
                 </div>
                 <div class="d-flex flex-wrap" style="gap: 10px;">
+                    @can('etudiants.create')
                     <a href="{{ route('admin.etudiant.create') }}"
                         class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">
                         <i class="fas fa-user-plus mg-r-5"></i> Nouvel élève
@@ -141,6 +142,7 @@
                         class="btn-fill-lg bg-blue-dark btn-hover-yellow text-white">
                         <i class="fas fa-file-invoice mg-r-5"></i> Inscrire un élève
                     </a>
+                    @endcan
                     <a href="{{ route('admin.inscription.index') }}" 
                         class="btn-fill-lg bg-light text-dark shadow-sm">
                         <i class="fas fa-list-ul mg-r-5"></i> Liste Inscriptions
@@ -236,6 +238,7 @@
                                             <a class="dropdown-item" href="{{ route('admin.etudiant.show', $etudiant->id) }}">
                                                 <i class="fas fa-eye text-primary mr-2"></i> Profil complet
                                             </a>
+                                            @can('etudiants.update')
                                             <a class="dropdown-item" href="{{ route('admin.etudiant.edit', $etudiant->id) }}">
                                                 <i class="fas fa-edit text-success mr-2"></i> Modifier infos
                                             </a>
@@ -245,6 +248,8 @@
                                                     <i class="fas fa-file-invoice mr-2"></i> Inscrire cet élève
                                                 </a>
                                             @endif
+                                            @endcan
+                                            @can('etudiants.delete')
                                             <div class="dropdown-divider"></div>
                                             <form action="{{ route('admin.etudiant.destroy', $etudiant->id) }}" method="POST" onsubmit="return confirm('Supprimer cet élève ?');">
                                                 @csrf
@@ -253,6 +258,7 @@
                                                     <i class="fas fa-trash-alt mr-2"></i> Supprimer
                                                 </button>
                                             </form>
+                                            @endcan
                                         </div>
                                     </div>
                                 </td>

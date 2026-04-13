@@ -7,6 +7,7 @@ use App\Models\Evaluation;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class NoteController extends Controller
 {
@@ -14,6 +15,7 @@ class NoteController extends Controller
 
     public function create(Evaluation $evaluation)
     {
+        Gate::authorize('notes.create');
         if ($evaluation->statut === 'validee') {
             abort(403, 'Notes déjà validées');
         }
@@ -35,6 +37,7 @@ class NoteController extends Controller
 
     public function store(Request $request, Evaluation $evaluation)
     {
+        Gate::authorize('notes.create');
         if ($evaluation->estArchivee()) {
             return back()->with('error', 'Modification impossible : cette année est archivée.');
         }
@@ -76,6 +79,7 @@ class NoteController extends Controller
 
     public function valider(Evaluation $evaluation)
     {
+        Gate::authorize('notes.update');
         if ($evaluation->estArchivee()) {
             return back()->with('error', 'Validation impossible : cette année est archivée.');
         }

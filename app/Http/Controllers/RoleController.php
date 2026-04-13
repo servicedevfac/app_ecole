@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Gate;
 
 class RoleController extends Controller
 {
@@ -12,6 +14,7 @@ class RoleController extends Controller
      */
     public function index()
     {
+        Gate::authorize('utilisateurs.view');
         $roles = Role::all();
         return view('admin.role.index', compact('roles'));
     }
@@ -21,7 +24,8 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('admin.roles.create');
+        Gate::authorize('utilisateurs.create');
+        return view('admin.role.create');
     }
 
     /**
@@ -29,6 +33,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('utilisateurs.create');
         $request->validate([
             'name' => 'required',
         ]);
@@ -42,8 +47,9 @@ class RoleController extends Controller
      */
     public function show(string $id)
     {
+        Gate::authorize('utilisateurs.view');
         $role = Role::findOrFail($id);
-        return view('admin.roles.show', compact('role'));
+        return view('admin.role.show', compact('role'));
     }
 
     /**
@@ -51,8 +57,9 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
+        Gate::authorize('utilisateurs.update');
         $role = Role::findOrFail($id);
-        return view('admin.roles.edit', compact('role'));
+        return view('admin.role.edit', compact('role'));
     }
 
     /**
@@ -60,6 +67,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        Gate::authorize('utilisateurs.update');
         $role = Role::findOrFail($id);
         $request->validate([
             'name' => 'required',
@@ -74,8 +82,30 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
+        Gate::authorize('utilisateurs.delete');
         $role = Role::findOrFail($id);
         $role->delete();
         return redirect()->route('admin.role.index')->with('success', 'Role supprime avec succes');
+    }
+
+    /**
+     * Show permissions for a role.
+     */
+    public function permissions(Role $role)
+    {
+        Gate::authorize('utilisateurs.update');
+        $permissions = Permission::all();
+        $rolePermissions = $role->permissions->pluck('id')->toArray();
+        return view('admin.role.permissions', compact('role', 'permissions', 'rolePermissions'));
+    }
+
+    /**
+     * Update permissions for a role.
+     */
+    public function updatePermissions(Request $request, Role $role)
+    {
+        Gate::authorize('utilisateurs.update');
+        $role->syncPermissions($request->permissions);
+        return redirect()->route('admin.role.index')->with('success', 'Permissions mises a jour avec succes');
     }
 }
