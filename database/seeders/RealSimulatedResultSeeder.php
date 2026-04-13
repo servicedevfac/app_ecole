@@ -16,7 +16,6 @@ use App\Models\affectations_pedagogiques;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Faker\Factory as Faker;
 
 class RealSimulatedResultSeeder extends Seeder
 {
@@ -25,7 +24,7 @@ class RealSimulatedResultSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = Faker::create('fr_FR');
+        $faker = fake('fr_FR');
 
         // 1. Créer une école complète
         $ecole = Ecole::firstOrCreate([
