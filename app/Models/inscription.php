@@ -19,7 +19,6 @@ class Inscription extends Model
         'status',
         'ecole_id',
     ];
-
     public function student()
     {
         return $this->belongsTo(Student::class);
