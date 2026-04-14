@@ -23,7 +23,7 @@ class AffectationPedagogiqueSeeder extends Seeder
             // Assigner 3 à 5 matières par classe avec des enseignants différents
             $matieresAleatoires = $matieres->random(rand(3, 5));
             foreach ($matieresAleatoires as $matiere) {
-                \App\Models\affectations_pedagogiques::firstOrCreate([
+                \App\Models\AffectationsPedagogiques::firstOrCreate([
                     'enseignant_id' => $enseignants->random()->id,
                     'matiere_id' => $matiere->id,
                     'classe_id' => $classe->id,

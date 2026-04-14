@@ -30,7 +30,7 @@ class Enseignant extends Model
     }
     public function affectations()
     {
-        return $this->hasMany(affectations_pedagogiques::class, 'enseignant_id');
+        return $this->hasMany(AffectationsPedagogiques::class, 'enseignant_id');
     }
     public function matieres()
     {
