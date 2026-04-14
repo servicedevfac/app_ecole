@@ -36,6 +36,8 @@ class RealSimulatedResultSeeder extends Seeder
             'status' => 'active',
         ]);
 
+        \App\Tenant\TenantManager::setEcoleId($ecole->id);
+
         $prefix = "LXM-"; // Prefix to ensure uniqueness
 
         // 2. Créer une année scolaire active

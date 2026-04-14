@@ -16,7 +16,22 @@ class InscriptionSeeder extends Seeder
         $classes = \App\Models\Classe::all();
         $anneeScolaire = \App\Models\Annee_scolaire::where('status', 'actif')->first();
 
-        if (!$anneeScolaire) return;
+        if (!$anneeScolaire) {
+            $this->command->warn("Aucune année scolaire active trouvée. Les inscriptions n'ont pas été créées.");
+            return;
+        }
+
+        if ($students->isEmpty()) {
+            $this->command->warn("Aucun élève trouvé. Les inscriptions n'ont pas été créées.");
+            return;
+        }
+
+        if ($classes->isEmpty()) {
+            $this->command->warn("Aucune classe trouvée. Les inscriptions n'ont pas été créées.");
+            return;
+        }
+
+        $this->command->info("Création des inscriptions pour " . $students->count() . " élèves...");
 
         foreach ($students as $student) {
             $classe = $classes->random();
@@ -24,7 +39,7 @@ class InscriptionSeeder extends Seeder
             $cycle = $niveau ? $niveau->cycle : null;
 
             if ($niveau && $cycle) {
-                \App\Models\inscription::updateOrCreate([
+                \App\Models\Inscription::updateOrCreate([
                     'student_id' => $student->id,
                     'annee_scolaire_id' => $anneeScolaire->id,
                 ], [
@@ -32,8 +47,11 @@ class InscriptionSeeder extends Seeder
                     'niveau_id' => $niveau->id,
                     'classe_id' => $classe->id,
                     'status' => 'inscrite',
+                    'ecole_id' => $student->ecole_id ?? $classe->ecole_id,
                 ]);
             }
         }
+
+        $this->command->info("Inscriptions terminées.");
     }
 }

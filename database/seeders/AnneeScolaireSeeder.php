@@ -14,6 +14,7 @@ class AnneeScolaireSeeder extends Seeder
     {
         \App\Models\Annee_scolaire::firstOrCreate([
             'annee' => '2025-2026',
+        ], [
             'date_debut' => '2025-09-01',
             'date_fin' => '2026-06-30',
             'status' => 'actif'
