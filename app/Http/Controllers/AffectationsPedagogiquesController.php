@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\affectations_pedagogiques;
+use App\Models\AffectationsPedagogiques;
 use App\Models\Annee_scolaire;
 use App\Models\Enseignant;
 use App\Models\Matiere;
@@ -21,7 +21,7 @@ class AffectationsPedagogiquesController extends Controller
      */
     public function index(Request $request)
     {
-        $query = affectations_pedagogiques::with([
+        $query = AffectationsPedagogiques::with([
             'enseignant',
             'matiere',
             'classe',
@@ -80,7 +80,7 @@ class AffectationsPedagogiquesController extends Controller
             ])->withInput();
         }
 
-        $existe = affectations_pedagogiques::where([
+        $existe = AffectationsPedagogiques::where([
             'enseignant_id' => $request->enseignant_id,
             'matiere_id' => $request->matiere_id,
             'classe_id' => $request->classe_id,
@@ -91,7 +91,7 @@ class AffectationsPedagogiquesController extends Controller
             return back()->withErrors('Cette affectation existe déjà.')->withInput();
         }
 
-        affectations_pedagogiques::create($request->all());
+        AffectationsPedagogiques::create($request->all());
 
         return redirect()
             ->route('admin.enseignant.index')
@@ -101,7 +101,7 @@ class AffectationsPedagogiquesController extends Controller
     /**
      * Formulaire d’édition
      */
-    public function edit(affectations_pedagogiques $affectationPedagogique)
+    public function edit(AffectationsPedagogiques $affectationPedagogique)
     {
         return view('admin.enseignant.affectations.edit', [
             'affectation' => $affectationPedagogique,
@@ -115,7 +115,7 @@ class AffectationsPedagogiquesController extends Controller
     /**
      * Mise à jour
      */
-    public function update(Request $request, affectations_pedagogiques $affectationPedagogique)
+    public function update(Request $request, AffectationsPedagogiques $affectationPedagogique)
     {
         $request->validate([
             'enseignant_id' => 'required|exists:enseignants,id',
@@ -133,7 +133,7 @@ class AffectationsPedagogiquesController extends Controller
             ]);
         }
 
-        $doublon = affectations_pedagogiques::where([
+        $doublon = AffectationsPedagogiques::where([
             'enseignant_id' => $request->enseignant_id,
             'matiere_id' => $request->matiere_id,
             'classe_id' => $request->classe_id,
@@ -154,7 +154,7 @@ class AffectationsPedagogiquesController extends Controller
     /**
      * Suppression sécurisée
      */
-    public function destroy(affectations_pedagogiques $affectationPedagogique)
+    public function destroy(AffectationsPedagogiques $affectationPedagogique)
     {
         // 🔐 Sécurité métier (exemple)
         if (method_exists($affectationPedagogique, 'notes')

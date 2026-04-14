@@ -9,7 +9,7 @@ use App\Models\Cycle;
 use App\Models\EcolePayment;
 use App\Models\Enseignant;
 use App\Models\Evaluation;
-use App\Models\inscription;
+use App\Models\Inscription;
 use App\Models\Matiere;
 use App\Models\Niveau;
 use App\Models\Note;
@@ -69,7 +69,9 @@ class DashboardController extends Controller
             $enseignant = Enseignant::where('user_id', auth()->id())->first();
             
             if (!$enseignant) {
-                return view('dashboard')->with('error', 'Compte enseignant non trouvé.');
+                // Si l'enseignant n'a pas encore de profil lié, on affiche le tableau de bord standard
+                // ou on le prévient. Pour éviter le crash on redirige vers le profil ou on continue avec le scolar dashboard.
+                return redirect()->route('profile.edit')->with('warning', 'Veuillez compléter vos informations d’enseignant.');
             }
 
             // Stats de l'enseignant
@@ -81,7 +83,7 @@ class DashboardController extends Controller
             $myEvaluationsCount = Evaluation::where('enseignant_id', auth()->id())->count();
             
             // Étudiants uniques dans ses classes - utilisation de la table inscription
-            $myStudentsCount = inscription::whereIn('classe_id', $myClasses->pluck('id'))->count();
+            $myStudentsCount = Inscription::whereIn('classe_id', $myClasses->pluck('id'))->count();
             
             $anneeActive = Annee_scolaire::active();
 

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToEcole;
 
-class affectations_pedagogiques extends Model
+class AffectationsPedagogiques extends Model
 {
     use BelongsToEcole;
     protected $table = 'affectations_pedagogiques';
