@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Inscription;
 
 class InscriptionSeeder extends Seeder
 {
@@ -39,7 +40,7 @@ class InscriptionSeeder extends Seeder
             $cycle = $niveau ? $niveau->cycle : null;
 
             if ($niveau && $cycle) {
-                \App\Models\Inscription::updateOrCreate([
+                Inscription::updateOrCreate([
                     'student_id' => $student->id,
                     'annee_scolaire_id' => $anneeScolaire->id,
                 ], [
