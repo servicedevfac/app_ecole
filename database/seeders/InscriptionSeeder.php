@@ -16,7 +16,6 @@ class InscriptionSeeder extends Seeder
         $students = \App\Models\Student::all();
         $classes = \App\Models\Classe::all();
         $anneeScolaire = \App\Models\Annee_scolaire::where('status', 'actif')->first();
-        
 
         if (!$anneeScolaire) {
             $this->command->warn("Aucune année scolaire active trouvée. Les inscriptions n'ont pas été créées.");

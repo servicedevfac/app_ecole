@@ -20,7 +20,7 @@ class EvaluationSeeder extends Seeder
             $inscriptions = $classe->inscriptions;
             if ($inscriptions->isEmpty()) continue;
 
-            $affectations = \App\Models\affectations_pedagogiques::where('classe_id', $classe->id)->get();
+            $affectations = \App\Models\AffectationsPedagogiques::where('classe_id', $classe->id)->get();
             
             foreach ($periodes as $periode) {
                 foreach ($affectations as $affectation) {
