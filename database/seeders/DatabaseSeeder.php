@@ -13,7 +13,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Toujours exécuter les données système essentielles
+        // 1. S'assurer qu'au moins une école existe pour l'assigner aux données de test
+        $this->call(EcoleSeeder::class);
+        $ecole = \App\Models\Ecole::first();
+        
+        if ($ecole) {
+            \App\Tenant\TenantManager::setEcoleId($ecole->id);
+        }
+
+        // 2. Exécuter les autres seeders
         $this->call([
             RoleSeeder::class,
             PermissionSeeder::class,
@@ -40,6 +48,7 @@ class DatabaseSeeder extends Seeder
         ], [
             'name' => 'Admin Test',
             'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'ecole_id' => $ecole ? $ecole->id : null,
         ]);
         $admin->assignRole('Super Admin');
     }

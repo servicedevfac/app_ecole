@@ -12,6 +12,9 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Student::factory()->count(50)->create();
+        $ecoleId = \App\Tenant\TenantManager::getEcoleId();
+        \App\Models\Student::factory()->count(50)->create([
+            'ecole_id' => $ecoleId
+        ]);
     }
 }
