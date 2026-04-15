@@ -240,6 +240,8 @@ class InscriptionController extends Controller
                 ['inscription_id' => $inscription->id],
                 [
                     'montant_total' => $total,
+                    'reste' => $total,
+                    'statut' => 'non soldé',
                 ]
             );
 
