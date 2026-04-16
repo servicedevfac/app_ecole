@@ -76,7 +76,7 @@
                     <div class="col-6">
                         <div class="item-content">
                             <div class="item-title">Année</div>
-                            <div class="item-number"><span>{{ $anneeActive->nom ?? 'N/A' }}</span></div>
+                            <div class="item-number"><span>{{ $anneeActive->annee ?? 'N/A' }}</span></div>
                         </div>
                     </div>
                 </div>

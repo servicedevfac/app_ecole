@@ -228,11 +228,17 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff|parent|Compta
     | PORTAIL ÉLÈVE
     |--------------------------------------------------------------------------
     */
-    Route::middleware('role:etudiant')->prefix('student')->name('student.')->group(function () {
-        Route::get('/dashboard', [StudentPortalController::class, 'index'])->name('dashboard');
-        Route::get('/notes', [StudentPortalController::class, 'notes'])->name('notes');
-        Route::get('/emploi-du-temps', [StudentPortalController::class, 'emploiDuTemps'])->name('emploi');
-        Route::get('/factures', [StudentPortalController::class, 'factures'])->name('factures');
+    Route::middleware(['role:etudiant'])->prefix('student')->name('student.')->group(function () {
+        // Ces routes doivent être accessibles même si le mot de passe doit être changé
+        Route::get('/modifier-mot-de-passe', [StudentPortalController::class, 'showChangePasswordForm'])->name('password.change');
+        Route::post('/modifier-mot-de-passe', [StudentPortalController::class, 'updatePassword'])->name('password.update');
+
+        Route::middleware('force.password.change')->group(function () {
+            Route::get('/dashboard', [StudentPortalController::class, 'index'])->name('dashboard');
+            Route::get('/notes', [StudentPortalController::class, 'notes'])->name('notes');
+            Route::get('/emploi-du-temps', [StudentPortalController::class, 'emploiDuTemps'])->name('emploi');
+            Route::get('/factures', [StudentPortalController::class, 'factures'])->name('factures');
+        });
     });
 
     /*

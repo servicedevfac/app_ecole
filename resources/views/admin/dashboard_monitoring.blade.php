@@ -1,4 +1,4 @@
-@extends('layouts.app')
+ @extends('layouts.app')
 @section('title', 'Tableau de Bord Monitoring')
 @section('content')
 
@@ -59,7 +59,7 @@
                     </div>
                     <div class="col-8 text-right">
                         <div class="item-content">
-                            <h6 class="text-uppercase mb-0" style="font-size: 11px; color: #777; letter-spacing: 1px;">Revenu Plateforme (B2B)</h6>
+                            <h6 class="text-uppercase mb-0" style="font-size: 11px; color: #777; letter-spacing: 1px;">Revenu Plateforme</h6>
                             <h2 class="font-weight-bold mb-0" style="font-size: 32px; color: #2d3748;">{{ number_format($platformRevenue, 0, ',', ' ') }} <small style="font-size: 14px;">FCFA</small></h2>
                             <small class="text-muted"><a href="{{ route('admin.ecole_payments.index') }}" style="color: #43e97b;">Voir le détail des règlements</a></small>
                         </div>
