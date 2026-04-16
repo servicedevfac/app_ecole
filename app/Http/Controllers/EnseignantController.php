@@ -46,6 +46,7 @@ class EnseignantController extends Controller
                 'name' => $request->input('nom'),
                 'email' => $request->input('email'),
                 'password' => Hash::make('123456'),
+                'must_change_password' => true,
             ]);
 
             $user->assignRole('enseignant');

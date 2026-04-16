@@ -22,6 +22,7 @@ use App\Http\Controllers\ParentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TypesFraisController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StudentPortalController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -46,7 +47,7 @@ Route::get('/student-details', function () {
 | ROUTES PROTÉGÉES
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff|parent|Comptable')->group(function () {
+Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff|parent|Comptable|etudiant')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
@@ -71,6 +72,7 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff|parent|Compta
         Route::get('/', [StudentController::class, 'index'])->name('admin.etudiant.index');
         Route::get('/create', [StudentController::class, 'create'])->name('admin.etudiant.create');
         Route::post('/', [StudentController::class, 'store'])->name('admin.etudiant.store');
+        Route::get('/credentials', [StudentController::class, 'credentials'])->name('admin.etudiant.credentials');
         Route::get('/affectation', [InscriptionController::class, 'create'])->name('admin.etudiant.affectation');
         Route::post('/affectation', [InscriptionController::class, 'store'])->name('admin.etudiant.affect');
 
@@ -220,6 +222,24 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff|parent|Compta
     |--------------------------------------------------------------------------
     */
     Route::resource('utilisateurs', UserController::class)->names('admin.user');
+
+    /*
+    |--------------------------------------------------------------------------
+    | PORTAIL ÉLÈVE
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware(['role:etudiant'])->prefix('student')->name('student.')->group(function () {
+        // Ces routes doivent être accessibles même si le mot de passe doit être changé
+        Route::get('/modifier-mot-de-passe', [StudentPortalController::class, 'showChangePasswordForm'])->name('password.change');
+        Route::post('/modifier-mot-de-passe', [StudentPortalController::class, 'updatePassword'])->name('password.update');
+
+        Route::middleware('force.password.change')->group(function () {
+            Route::get('/dashboard', [StudentPortalController::class, 'index'])->name('dashboard');
+            Route::get('/notes', [StudentPortalController::class, 'notes'])->name('notes');
+            Route::get('/emploi-du-temps', [StudentPortalController::class, 'emploiDuTemps'])->name('emploi');
+            Route::get('/factures', [StudentPortalController::class, 'factures'])->name('factures');
+        });
+    });
 
     /*
     |--------------------------------------------------------------------------

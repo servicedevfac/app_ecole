@@ -41,9 +41,12 @@
                 <form action="{{ route('login') }}" method="POST" class="login-form">
                     @csrf
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" placeholder="Enter email" class="form-control" name="email" required>
-                        <i class="far fa-envelope"></i>
+                        <label>Email ou Matricule</label>
+                        <input type="text" placeholder="Entrez votre email ou matricule" class="form-control" name="identity" required>
+                        <i class="far fa-user"></i>
+                        @error('identity')
+                            <span class="text-danger small">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label>Password</label>

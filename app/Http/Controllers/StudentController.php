@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StudentRequest;
 
 use Illuminate\Support\Facades\Gate;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
 {
@@ -108,12 +110,32 @@ class StudentController extends Controller
             'relation' => $request->relation,
         ]);
 
+        // 4️⃣ Création automatique du compte utilisateur
+        $password = strtolower($etudiant->nom) . '@' . $etudiant->matricule; // Règle par défaut
+        
+        $user = User::create([
+            'name'     => $etudiant->nom . ' ' . $etudiant->prenom,
+            'username' => $etudiant->matricule,
+            'email'    => $etudiant->email,
+            'password' => Hash::make($password),
+            'ecole_id' => $etudiant->ecole_id,
+            'must_change_password' => true,
+        ]);
+
+        $user->assignRole('etudiant');
+        $etudiant->update(['user_id' => $user->id]);
+
         DB::commit();
+
+        return redirect()->route('admin.etudiant.credentials', [
+            'id' => $etudiant->id,
+            'password' => $password
+        ])->with('success', 'Élève et compte utilisateur créés avec succès');
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Erreur lors de l\'ajout de l\'élève'. $e->getMessage());
+            return redirect()->back()->with('error', 'Erreur lors de l\'ajout de l\'élève : ' . $e->getMessage());
         }
-        return redirect()->route('admin.etudiant.index')->with('success', 'Eleve ajoute avec succes');
     }
 
     /**
@@ -218,6 +240,13 @@ class StudentController extends Controller
         return redirect()->route('admin.etudiant.index')->with('success', 'Eleves promus avec succes');
     }
 
+
+    public function credentials(Request $request)
+    {
+        $etudiant = Student::findOrFail($request->id);
+        $password = $request->password;
+        return view('admin.etudiant.credentials', compact('etudiant', 'password'));
+    }
 
     /**
      * Remove the specified resource from storage.

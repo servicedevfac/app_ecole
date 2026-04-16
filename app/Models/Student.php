@@ -18,6 +18,7 @@ class Student extends Model
 
 
     protected $fillable = [
+        'user_id',
         'matricule',
         'nom',
         'prenom',
@@ -101,5 +102,10 @@ class Student extends Model
     public function presences()
     {
         return $this->hasMany(Presence::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

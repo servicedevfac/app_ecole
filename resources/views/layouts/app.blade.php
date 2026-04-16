@@ -189,8 +189,31 @@
                                     class="flaticon-script"></i><span>Bulletins & Notes</span></a>
                         </li>
                         @endrole
+                        @role('etudiant')
+                        {{-- MENU ÉLÈVE --}}
+                        <li class="nav-item text-muted px-3 mt-3 mb-1"
+                                style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;">
+                                Mon Espace Élève
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('student.dashboard') }}" class="nav-link"><i
+                                    class="flaticon-dashboard"></i><span>Tableau de bord</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('student.notes') }}" class="nav-link"><i
+                                    class="flaticon-script"></i><span>Mes Notes</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('student.emploi') }}" class="nav-link"><i
+                                    class="flaticon-calendar"></i><span>Mon Emploi du Temps</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('student.factures') }}" class="nav-link"><i
+                                    class="flaticon-technological"></i><span>Mes Factures</span></a>
+                        </li>
+                        @endrole
 
-                        @if(!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('enseignant'))
+                        @if(!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('enseignant') && !auth()->user()->hasRole('etudiant'))
                             {{-- MENU SCOLAIRE (ADMIN ÉCOLE & STAFF) --}}
                             <li class="nav-item">
                                 <a href="{{ route('dashboard') }}" class="nav-link"><i

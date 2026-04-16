@@ -20,8 +20,7 @@ class EvaluationSeeder extends Seeder
             $inscriptions = $classe->inscriptions;
             if ($inscriptions->isEmpty()) continue;
 
-            $affectations = \App\Models\AffectationsPedagogiques::where('classe_id', $classe->id)->get();
-            
+            $affectations = \App\Models\AffectationsPedagogiques::where('classe_id', $classe->id)->get();            
             foreach ($periodes as $periode) {
                 foreach ($affectations as $affectation) {
                     // Créer une évaluation pour chaque matière affectée dans chaque période
@@ -37,7 +36,6 @@ class EvaluationSeeder extends Seeder
                         'statut' => 'validee',
                         'periode_id' => $periode->id,
                     ]);
-
                     // Créer des notes pour chaque élève inscrit dans la classe
                     foreach ($inscriptions as $inscription) {
                         \App\Models\Note::create([
