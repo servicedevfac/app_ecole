@@ -238,6 +238,9 @@
                                             <a class="dropdown-item" href="{{ route('admin.etudiant.show', $etudiant->id) }}">
                                                 <i class="fas fa-eye text-primary mr-2"></i> Profil complet
                                             </a>
+                                            <a class="dropdown-item" href="{{ route('admin.etudiant.documents.index', $etudiant->id) }}">
+                                                <i class="fas fa-file-alt text-info mr-2"></i> Documents
+                                            </a>
                                             @can('etudiants.update')
                                             <a class="dropdown-item" href="{{ route('admin.etudiant.edit', $etudiant->id) }}">
                                                 <i class="fas fa-edit text-success mr-2"></i> Modifier infos

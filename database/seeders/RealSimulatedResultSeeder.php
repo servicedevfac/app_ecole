@@ -12,7 +12,7 @@ use App\Models\Matiere;
 use App\Models\Niveau;
 use App\Models\Student;
 use App\Models\User;
-use App\Models\affectations_pedagogiques;
+use App\Models\AffectationsPedagogiques;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -177,7 +177,7 @@ class RealSimulatedResultSeeder extends Seeder
         // 9. Affectations pédagogiques cohérentes
         foreach ($classes as $classe) {
             foreach ($matieres as $matiere) {
-                affectations_pedagogiques::firstOrCreate([
+                AffectationsPedagogiques::firstOrCreate([
                     'matiere_id' => $matiere->id,
                     'classe_id' => $classe->id,
                     'annee_scolaire_id' => $anneeScolaire->id,

@@ -50,4 +50,8 @@ class Classe extends Model
         return $this->hasMany(Frais_Scolaire::class);
     }
 
+    public function emploisDuTemps()
+    {
+        return $this->hasMany(Emploi_du_temps::class);
+    }
 }

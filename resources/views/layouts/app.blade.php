@@ -170,6 +170,10 @@
                             <a href="{{ route('admin.emploi_du_temps.index') }}" class="nav-link"><i
                                     class="flaticon-calendar"></i><span>Mon Emploi du temps</span></a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.presences.index') }}" class="nav-link"><i
+                                    class="fas fa-user-check"></i><span>Présences / Appel</span></a>
+                        </li>
                         <li class="nav-item sidebar-nav-item">
                             <a href="#" class="nav-link"><i class="flaticon-shopping-list"></i><span>Mes
                                     Évaluations</span></a>
@@ -210,6 +214,10 @@
                         <li class="nav-item">
                             <a href="{{ route('student.factures') }}" class="nav-link"><i
                                     class="flaticon-technological"></i><span>Mes Factures</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('student.documents') }}" class="nav-link"><i
+                                    class="flaticon-copy"></i><span>Mes Documents</span></a>
                         </li>
                         @endrole
 
@@ -272,6 +280,10 @@
                             <li class="nav-item">
                                 <a href="{{ route('admin.emploi_du_temps.index') }}" class="nav-link"><i
                                         class="flaticon-calendar"></i><span>Emploi du temps</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.presences.index') }}" class="nav-link"><i
+                                        class="fas fa-user-check"></i><span>Présences / Appel</span></a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.evaluations.index') }}" class="nav-link"><i

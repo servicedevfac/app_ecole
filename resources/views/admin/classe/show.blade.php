@@ -303,7 +303,7 @@
                                             
                                             <!-- Trouver l'enseignant affecté à cette matière pour cette classe -->
                                             @php
-                                                $affectation = \App\Models\affectations_pedagogiques::where('classe_id', $classe->id)
+                                                $affectation = \App\Models\AffectationsPedagogiques::where('classe_id', $classe->id)
                                                     ->where('matiere_id', $matiere->id)
                                                     ->first();
                                                 $enseignant = $affectation ? $affectation->enseignant : null;

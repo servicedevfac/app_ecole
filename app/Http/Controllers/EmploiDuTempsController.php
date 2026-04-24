@@ -295,4 +295,25 @@ class EmploiDuTempsController extends Controller
         return view('admin.emploi_du_temps.by-salle', compact('schedules', 'salle'));
     }
 
+    /**
+     * 👨‍🏫 Récupérer les enseignants assignés à une classe et une matière
+     */
+    public function getTeachersByClasseAndMatiere(Request $request)
+    {
+        $matiere_id = $request->matiere_id;
+
+        $teachers = \App\Models\AffectationsPedagogiques::with('enseignant')
+            ->where('matiere_id', $matiere_id)
+            ->get()
+            ->map(function($affectation) {
+                return [
+                    'id' => $affectation->enseignant->id,
+                    'name' => $affectation->enseignant->nom . ' ' . $affectation->enseignant->prenom,
+                ];
+            })
+            ->unique('id')
+            ->values();
+
+        return response()->json($teachers);
+    }
 }

@@ -98,7 +98,7 @@ class StudentPortalController extends Controller
             ->get();
 
         $jours = \App\Models\Jour::orderBy('id')->get();
-        $horaires = \App\Models\Horaire::orderBy('debut')->get();
+        $horaires = \App\Models\Horaire::orderBy('heure_debut')->get();
 
         return view('student.emploi', compact('student', 'emplois', 'jours', 'horaires', 'classe'));
     }
@@ -113,6 +113,31 @@ class StudentPortalController extends Controller
             ->get();
 
         return view('student.factures', compact('student', 'inscriptions'));
+    }
+
+    public function documents()
+    {
+        $student = $this->getStudent();
+        $documents = $student->documents()->latest()->get();
+
+        return view('student.documents', compact('student', 'documents'));
+    }
+
+    public function downloadDocument(\App\Models\StudentDocument $document)
+    {
+        $student = $this->getStudent();
+        
+        // Sécurité : Vérifier que le document appartient bien à l'élève connecté
+        if ($document->student_id !== $student->id) {
+            abort(403, 'Action non autorisée.');
+        }
+
+        $path = storage_path('app/public/' . $document->file_path);
+        if (!file_exists($path)) {
+            return back()->with('error', 'Fichier introuvable.');
+        }
+
+        return response()->download($path, $document->titre . '.' . $document->file_type);
     }
 
     public function showChangePasswordForm()
