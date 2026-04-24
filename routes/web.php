@@ -23,6 +23,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TypesFraisController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentPortalController;
+use App\Http\Controllers\PresenceController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -100,7 +101,9 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff|parent|Compta
     |--------------------------------------------------------------------------
     */
     Route::resource('emploi_du_temps', EmploiDuTempsController::class)->names('admin.emploi_du_temps');
-    //Route::resource('attendences',AttendenceController::class)->names('admin.attendence');
+    Route::get('api/get-teachers-by-assignment', [EmploiDuTempsController::class, 'getTeachersByClasseAndMatiere'])->name('admin.emploi_du_temps.get_teachers');
+    Route::resource('presences', PresenceController::class)->names('admin.presences');
+    Route::get('api/lessons-by-classe/{classe_id?}', [PresenceController::class, 'getLessonsByClasse'])->name('admin.presences.get_lessons');
     Route::resource('matieres', MatiereController::class)->names('admin.matiere');
     Route::resource('cycles', CycleController::class)->names('admin.cycle');
     /*
@@ -238,6 +241,8 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff|parent|Compta
             Route::get('/notes', [StudentPortalController::class, 'notes'])->name('notes');
             Route::get('/emploi-du-temps', [StudentPortalController::class, 'emploiDuTemps'])->name('emploi');
             Route::get('/factures', [StudentPortalController::class, 'factures'])->name('factures');
+            Route::get('/documents', [StudentPortalController::class, 'documents'])->name('documents');
+            Route::get('/documents/{document}/download', [StudentPortalController::class, 'downloadDocument'])->name('documents.download');
         });
     });
 

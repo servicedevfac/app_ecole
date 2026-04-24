@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Classe *</label>
-                        <select name="classe_id" class="select2" required>
+                        <select name="classe_id" id="classeSelect" class="select2" required>
                             @foreach($classes as $classe)
                                 <option value="{{ $classe->id }}" {{ $evaluation->classe_id == $classe->id ? 'selected' : '' }}>
                                     {{ $classe->nom }}
@@ -37,7 +37,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Matière *</label>
-                        <select name="matiere_id" class="select2" required>
+                        <select name="matiere_id" id="matiereSelect" class="select2" required>
                             @foreach($matieres as $matiere)
                                 <option value="{{ $matiere->id }}" {{ $evaluation->matiere_id == $matiere->id ? 'selected' : '' }}>
                                     {{ $matiere->nom }}
@@ -57,7 +57,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Enseignant *</label>
-                        <select name="enseignant_id" class="select2" required>
+                        <select name="enseignant_id" id="enseignantSelect" class="select2" required>
                             @foreach($enseignants as $enseignant)
                                 <option value="{{ $enseignant->id }}" {{ $evaluation->enseignant_id == $enseignant->id ? 'selected' : '' }}>
                                     {{ $enseignant->nom }} {{ $enseignant->prenom }}
@@ -100,4 +100,44 @@
             </form>
         </div>
     </div>
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('#classeSelect, #matiereSelect').on('change', function() {
+            var classe_id = $('#classeSelect').val();
+            var matiere_id = $('#matiereSelect').val();
+            
+            if(classe_id && matiere_id) {
+                $.ajax({
+                    url: "{{ route('admin.emploi_du_temps.get_teachers') }}",
+                    type: "GET",
+                    data: {
+                        classe_id: classe_id,
+                        matiere_id: matiere_id
+                    },
+                    success: function(data) {
+                        var teacherSelect = $('#enseignantSelect');
+                        var currentTeacherId = "{{ $evaluation->enseignant_id }}";
+                        teacherSelect.empty();
+                        teacherSelect.append('<option value="" disabled>Sélectionner</option>');
+                        
+                        if(data.length > 0) {
+                            $.each(data, function(index, teacher) {
+                                var selected = (teacher.id == currentTeacherId) ? 'selected' : '';
+                                teacherSelect.append('<option value="' + teacher.id + '" ' + selected + '>' + teacher.name + '</option>');
+                            });
+                        } else {
+                            teacherSelect.append('<option value="" disabled>Aucun enseignant assigné</option>');
+                        }
+                        
+                        if(teacherSelect.hasClass('select2')) {
+                            teacherSelect.trigger('change');
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+@endpush
 @endsection

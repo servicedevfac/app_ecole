@@ -27,7 +27,7 @@
                         <select name="inscription_id" class="select2" onchange="this.form.submit()">
                             @foreach($inscriptions as $ins)
                                 <option value="{{ $ins->id }}" {{ $selectedInscriptionId == $ins->id ? 'selected' : '' }}>
-                                    Année {{ $ins->anneeScolaire->nom }} - {{ $ins->classe->nom ?? 'N/A' }}
+                                    Année {{ $ins->anneeScolaire->annee }} - {{ $ins->classe->nom ?? 'N/A' }}
                                 </option>
                             @endforeach
                         </select>

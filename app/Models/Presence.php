@@ -13,6 +13,8 @@ class Presence extends Model
     protected $fillable = [
         'student_id',
         'classe_id',
+        'emploi_du_temps_id',
+        'matiere_id',
         'date',
         'statut',
         'ecole_id',
@@ -26,5 +28,15 @@ class Presence extends Model
     public function classe()
     {
         return $this->belongsTo(Classe::class);
+    }
+
+    public function emploiDuTemps()
+    {
+        return $this->belongsTo(Emploi_du_temps::class, 'emploi_du_temps_id');
+    }
+
+    public function matiere()
+    {
+        return $this->belongsTo(Matiere::class);
     }
 }

@@ -128,4 +128,43 @@
         </form>
     </div>
 </div>
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('#classeSelect, #matiereSelect').on('change', function() {
+            var classe_id = $('#classeSelect').val();
+            var matiere_id = $('#matiereSelect').val();
+            
+            if(classe_id && matiere_id) {
+                $.ajax({
+                    url: "{{ route('admin.emploi_du_temps.get_teachers') }}",
+                    type: "GET",
+                    data: {
+                        classe_id: classe_id,
+                        matiere_id: matiere_id
+                    },
+                    success: function(data) {
+                        var teacherSelect = $('#enseignantSelect');
+                        teacherSelect.empty();
+                        teacherSelect.append('<option value="" disabled selected>Choisissez un enseignant</option>');
+                        
+                        if(data.length > 0) {
+                            $.each(data, function(index, teacher) {
+                                teacherSelect.append('<option value="' + teacher.id + '">' + teacher.name + '</option>');
+                            });
+                        } else {
+                            teacherSelect.append('<option value="" disabled>Aucun enseignant assigné</option>');
+                        }
+                        
+                        // Si Select2 est utilisé, rafraîchir
+                        if(teacherSelect.hasClass('select2')) {
+                            teacherSelect.trigger('change');
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+@endpush
 @endsection

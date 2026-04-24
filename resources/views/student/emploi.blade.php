@@ -27,7 +27,7 @@
                         <tr class="bg-light-blue text-white">
                             <th>Heure</th>
                             @foreach($jours as $jour)
-                                <th>{{ $jour->nom }}</th>
+                                <th>{{ $jour->jours }}</th>
                             @endforeach
                         </tr>
                     </thead>
@@ -35,11 +35,11 @@
                         @foreach($horaires as $horaire)
                         <tr>
                             <td class="bg-light-gray font-bold">
-                                {{ \Carbon\Carbon::parse($horaire->debut)->format('H:i') }} - {{ \Carbon\Carbon::parse($horaire->fin)->format('H:i') }}
+                                {{ \Carbon\Carbon::parse($horaire->heure_debut)->format('H:i') }} - {{ \Carbon\Carbon::parse($horaire->heure_fin)->format('H:i') }}
                             </td>
                             @foreach($jours as $jour)
                                 @php
-                                    $cours = $emplois->where('horaire_id', $horaire->id)->where('jour_id', $jour->id)->first();
+                                    $cours = $emplois->where('horaire_id', $horaire->id)->where('jours_id', $jour->id)->first();
                                 @endphp
                                 <td class="text-center" style="{{ $cours ? 'background-color: #f0f7ff;' : '' }}">
                                     @if($cours)
