@@ -10,7 +10,13 @@ class Parents extends Model
 {
     /** @use HasFactory<\Database\Factories\ParentsFactory> */
     use HasFactory, BelongsToEcole;
-    protected $fillable = ['nom','prenom','email','telephone','autre_telephone','adresse', 'ecole_id'];
+    protected $fillable = ['user_id', 'nom', 'prenom', 'email', 'telephone', 'autre_telephone', 'adresse', 'ecole_id'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function students()
     {
         return $this->belongsToMany(

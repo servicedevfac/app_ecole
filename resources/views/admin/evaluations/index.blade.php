@@ -13,10 +13,13 @@
         </ul>
     </div>
     <!-- Breadcubs Area End Here -->
-    <!-- All Subjects Area Start Here -->
+    <!-- All Subjects Area Start Here -->  
+    
     <div class="row">
+        @role('enseignant')
         <div class="col-4-xxxl col-12">
             <div class="card height-auto">
+              
                 <div class="card-body">
                     <div class="heading-layout1">
                         <div class="item-title">
@@ -129,8 +132,10 @@
                         </div>
                     </form>
                 </div>
+             
             </div>
-        </div>
+        </div>   
+        @endrole
         <div class="col-8-xxxl col-12">
             <div class="card height-auto">
                 <div class="card-body">
@@ -260,6 +265,9 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="mt-4 d-flex justify-content-center">
+                            {{ $evaluations->links() }}
+                        </div>
                     </div>
                 </div>
             </div>

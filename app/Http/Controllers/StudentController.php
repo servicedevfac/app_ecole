@@ -13,6 +13,7 @@ use App\Http\Requests\StudentRequest;
 use Illuminate\Support\Facades\Gate;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class StudentController extends Controller
 {
@@ -52,7 +53,7 @@ class StudentController extends Controller
             });
         }
 
-        $etudiants = $query->orderBy('nom')->orderBy('prenom')->get();
+        $etudiants = $query->orderBy('nom')->orderBy('prenom')->paginate(10);
         $classes = \App\Models\Classe::orderBy('nom')->get();
 
         return view('admin.etudiant.index', compact('etudiants', 'classes', 'activeAnnee'));
@@ -106,31 +107,48 @@ class StudentController extends Controller
                 ]);
             }
             $parentId = $parent->id;
-        }   $etudiant->parents()->attach($parentId, [
+        }
+
+        $etudiant->parents()->attach($parentId, [
             'relation' => $request->relation,
         ]);
 
-        // 4️⃣ Création automatique du compte utilisateur
-        $password = strtolower($etudiant->nom) . '@' . $etudiant->matricule; // Règle par défaut
-        
-        $user = User::create([
-            'name'     => $etudiant->nom . ' ' . $etudiant->prenom,
-            'username' => $etudiant->matricule,
-            'email'    => $etudiant->email,
-            'password' => Hash::make($password),
-            'ecole_id' => $etudiant->ecole_id,
-            'must_change_password' => true,
-        ]);
+        $parent = \App\Models\Parents::find($parentId);
 
-        $user->assignRole('etudiant');
-        $etudiant->update(['user_id' => $user->id]);
+        // 4️⃣ Création/Récupération automatique du compte utilisateur pour le PARENT
+        if (!$parent->user_id) {
+            $password = $this->generPassword();
+            $userEmail = $parent->email ?? strtolower($parent->nom) . '.' . strtolower($parent->prenom) . "@school-parent.com";
+            
+            // On vérifie si l'email existe déjà (cas rare où un utilisateur a déjà cet email généré)
+            $existingUser = User::where('email', $userEmail)->orWhere('username', $parent->telephone)->first();
+            
+            if ($existingUser) {
+                $user = $existingUser;
+            } else {
+                $user = User::create([
+                    'name'     => $parent->nom . ' ' . $parent->prenom,
+                    'username' => $parent->telephone,
+                    'email'    => $userEmail,
+                    'password' => Hash::make($password),
+                    'ecole_id' => $etudiant->ecole_id,
+                    'must_change_password' => true,
+                ]);
+                $user->assignRole('parent');
+            }
+            
+            $parent->update(['user_id' => $user->id]);
+        } else {
+            $user = $parent->user;
+            $password = '******** (Déjà existant)';
+        }
 
         DB::commit();
 
         return redirect()->route('admin.etudiant.credentials', [
             'id' => $etudiant->id,
             'password' => $password
-        ])->with('success', 'Élève et compte utilisateur créés avec succès');
+        ])->with('success', 'Élève enregistré et compte parent configuré avec succès');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -243,9 +261,10 @@ class StudentController extends Controller
 
     public function credentials(Request $request)
     {
-        $etudiant = Student::findOrFail($request->id);
+        $etudiant = Student::with('parents')->findOrFail($request->id);
+        $parent = $etudiant->parents->first();
         $password = $request->password;
-        return view('admin.etudiant.credentials', compact('etudiant', 'password'));
+        return view('admin.etudiant.credentials', compact('etudiant', 'parent', 'password'));
     }
 
     /**
@@ -258,5 +277,10 @@ class StudentController extends Controller
         $etudiant->delete();
 
         return redirect()->route('admin.etudiant.index')->with('success', 'Eleve supprime avec succes');
+    }
+
+    private function generPassword($length = 8)
+    {
+        return Str::random($length);
     }
 }

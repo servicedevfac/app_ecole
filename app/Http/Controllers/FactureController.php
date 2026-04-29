@@ -15,7 +15,7 @@ class FactureController extends Controller
     public function index()
     {
         Gate::authorize('paiements.view');
-        $factures = Facture::with(['inscription.student', 'inscription.classe'])->orderBy('created_at', 'desc')->get();
+        $factures = Facture::with(['inscription.student', 'inscription.classe'])->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.factures.index', compact('factures'));
     }
 

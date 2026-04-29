@@ -19,8 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \Illuminate\Pagination\Paginator::useBootstrapFive();
         \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
             return $user->hasRole('Super Admin') ? true : null;
         });
+
+        \App\Models\Ecole::observe(\App\Observers\EcoleObserver::class);
     }
 }

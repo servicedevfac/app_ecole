@@ -38,7 +38,8 @@ class Student extends Model
         $month = date('m');
         $prefix = $year . $month;
 
-        $lastStudent = self::where('matricule', 'like', $prefix . '%')
+        $lastStudent = self::withoutGlobalScopes()
+            ->where('matricule', 'like', $prefix . '%')
             ->orderBy('matricule', 'desc')
             ->first();
 

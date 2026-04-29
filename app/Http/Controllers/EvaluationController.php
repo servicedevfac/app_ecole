@@ -23,7 +23,7 @@ class EvaluationController extends Controller
         $classes = Classe::get();
         $matieres = Matiere::get();
         $enseignants = Enseignant::get();
-        $evaluations = Evaluation::with('periode')->get();
+        $evaluations = Evaluation::with('periode')->paginate(10);
         return view('admin.evaluations.index', compact('evaluations', 'classes', 'matieres', 'enseignants', 'periodes'));
     }
 

@@ -24,7 +24,7 @@ class UserController extends Controller
             $query->where('ecole_id', auth()->user()->ecole_id);
         }
 
-        $users = $query->get();
+        $users = $query->paginate(10);
         return view('admin.utilisateur.index', compact('users'));
     }
 

@@ -12,7 +12,7 @@ class ParentController extends Controller
      */
     public function index()
     {
-        $parents = Parents::all();
+        $parents = Parents::paginate(10);
         return view('admin.parents.index', compact('parents'));
     }
 

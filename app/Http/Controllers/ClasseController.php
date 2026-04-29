@@ -17,7 +17,7 @@ class ClasseController extends Controller
      */
     public function index()
     {
-        $allClasses = Classe::with(['niveau', 'inscriptions'])->get();
+        $allClasses = Classe::with(['niveau', 'inscriptions'])->paginate(10);
         $niveaux = Niveau::all();
         return view('admin.classe.index', compact('allClasses','niveaux'));
     }

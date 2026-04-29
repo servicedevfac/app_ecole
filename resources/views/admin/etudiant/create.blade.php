@@ -26,6 +26,16 @@
                     </div>
                 </div>
             </div>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('admin.etudiant.store') }}" method="POST" class="new-added-form"
                 enctype="multipart/form-data">
                 @csrf
@@ -35,49 +45,34 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Nom *</label>
-                        <input name="nom" type="text" class="form-control" value="{{ old('nom') }}" required>
+                        <input name="nom" type="text" class="form-control @error('nom') is-invalid @enderror" value="{{ old('nom') }}" required>
+                        @error('nom')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Prénoms *</label>
-                        <input name="prenom" type="text" class="form-control" value="{{ old('prenom') }}" required>
+                        <input name="prenom" type="text" class="form-control @error('prenom') is-invalid @enderror" value="{{ old('prenom') }}" required>
+                        @error('prenom')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Sexe *</label>
-                        <select name="sexe" class="form-select form-select-lg mb-3 px-3 bg-gray-200" required>
+                        <select name="sexe" class="select2 @error('sexe') is-invalid @enderror" required>
                             <option value="">Veuillez sélectionner le sexe *</option>
                             <option value="M" {{ old('sexe') == 'M' ? 'selected' : '' }}>Masculin</option>
                             <option value="F" {{ old('sexe') == 'F' ? 'selected' : '' }}>Féminin</option>
                         </select>
+                        @error('sexe')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
                     </div>
-                    <div class="col-12 mt-4">
-                        <h4>Informations Parent (Nouveau ou Existant)</h4>
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Nom du parent *</label>
-                        <input name="parent_nom" type="text" class="form-control" value="{{ old('parent_nom') }}" required>
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Prénom(s) parent *</label>
-                        <input name="parent_prenom" type="text" class="form-control" value="{{ old('parent_prenom') }}"
-                            required>
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Téléphone parent *</label>
-                        <input name="parent_telephone" type="text" class="form-control"
-                            value="{{ old('parent_telephone') }}" required>
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Email parent</label>
-                        <input name="parent_email" type="email" class="form-control" value="{{ old('parent_email') }}">
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Adresse parent *</label>
-                        <input name="parent_adresse" type="text" class="form-control" value="{{ old('parent_adresse') }}"
-                            required>
-                    </div>
+                  
+
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Relation *</label>
-                        <select name="relation" class="select2" required>
+                        <select name="relation" class="select2 @error('relation') is-invalid @enderror" required>
                             <option value="">Lien de parenté *</option>
                             <option value="pere" {{ old('relation') == 'pere' ? 'selected' : '' }}>Père</option>
                             <option value="mere" {{ old('relation') == 'mere' ? 'selected' : '' }}>Mère</option>
@@ -85,27 +80,42 @@
                             <option value="frere" {{ old('relation') == 'frere' ? 'selected' : '' }}>Frère</option>
                             <option value="soeur" {{ old('relation') == 'soeur' ? 'selected' : '' }}>Sœur</option>
                         </select>
+                        @error('relation')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Date de naissance *</label>
-                        <input name="date_naissance" type="date" class="form-control" value="{{ old('date_naissance') }}"
+                        <input name="date_naissance" type="date" class="form-control @error('date_naissance') is-invalid @enderror" value="{{ old('date_naissance') }}"
                             required>
+                        @error('date_naissance')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                         <i class="far fa-calendar-alt"></i>
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Numéro de téléphone</label>
-                        <input name="phone" type="text" class="form-control" value="{{ old('phone') }}">
+                        <label>Numéro de téléphone *</label>
+                        <input name="phone" type="text" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone') }}" required>
+                        @error('phone')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Adresse</label>
-                        <input name="address" type="text" class="form-control" value="{{ old('address') }}">
+                        <label>Adresse *</label>
+                        <input name="address" type="text" class="form-control @error('address') is-invalid @enderror" value="{{ old('address') }}" required>
+                        @error('address')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>E-mail</label>
-                        <input name="email" type="email" class="form-control" value="{{ old('email') }}">
+                        <label>E-mail *</label>
+                        <input name="email" type="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Est affecté à un cycle *</label>
+                        <label>Affecté de l'état (booléen) *</label>
                         <select name="est_affecte" class="select2" required>
                             <option value="">Veuillez sélectionner l'état d'affectation *</option>
                             <option value="true" {{ old('est_affecte') == 'true' ? 'selected' : '' }}>Oui</option>
@@ -115,6 +125,47 @@
                     <div class="col-lg-6 col-12 form-group mg-t-30">
                         <label class="text-dark-medium">Upload Student Photo (150px X 150px)</label>
                         <input type="file" class="form-control-file" name='photo'>
+                    </div>
+                      <div class="col-12 mt-4">
+                        <h4>Informations Parent (Nouveau ou Existant)</h4>
+                    </div>
+                     <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <label>Nom du parent *</label>
+                        <input name="parent_nom" type="text" class="form-control @error('parent_nom') is-invalid @enderror" value="{{ old('parent_nom') }}" required>
+                        @error('parent_nom')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <label>Prénom(s) parent *</label>
+                        <input name="parent_prenom" type="text" class="form-control @error('parent_prenom') is-invalid @enderror" value="{{ old('parent_prenom') }}"
+                            required>
+                        @error('parent_prenom')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <label>Téléphone parent *</label>
+                        <input name="parent_telephone" type="text" class="form-control @error('parent_telephone') is-invalid @enderror"
+                            value="{{ old('parent_telephone') }}" required>
+                        @error('parent_telephone')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <label>Email parent</label>
+                        <input name="parent_email" type="email" class="form-control @error('parent_email') is-invalid @enderror" value="{{ old('parent_email') }}">
+                        @error('parent_email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <label>Adresse parent *</label>
+                        <input name="parent_adresse" type="text" class="form-control @error('parent_adresse') is-invalid @enderror" value="{{ old('parent_adresse') }}"
+                            required>
+                        @error('parent_adresse')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                 </div>

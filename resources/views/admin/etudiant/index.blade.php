@@ -276,6 +276,9 @@
                         @endforelse
                     </tbody>
                 </table>
+                <div class="mt-4 d-flex justify-content-center">
+                    {{ $etudiants->links() }}
+                </div>
             </div>
         </div>
     </div>

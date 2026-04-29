@@ -24,18 +24,18 @@ class StudentRequest extends FormRequest
         $studentId = $this->route('id');
 
         return [
-            'nom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-]+$/',
-            'prenom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-]+$/',
+            'nom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-\']+$/',
+            'prenom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-\']+$/',
             'date_naissance' => 'required|date|before:today|after:2000-01-01',
             'email' => [
-                'required',
+                'nullable',
                 'email',
                 'max:255',
                 \Illuminate\Validation\Rule::unique('students')->ignore($studentId),
             ],
-            'phone' => 'required|string|regex:/^[\+]?[0-9\-\(\)\s]+$/|max:20',
-            'sexe' => 'required|in:M,F,Homme,Femme',
-            'address' => 'required|string|max:500',
+            'phone' => 'nullable|string|max:20',
+            'sexe' => 'required|in:M,F',
+            'address' => 'nullable|string|max:500',
             'parent_id' => 'nullable|exists:parents,id',
             'parent_nom' => 'required_without:parent_id|string|max:255',
             'parent_prenom' => 'required_without:parent_id|string|max:255',
@@ -44,6 +44,7 @@ class StudentRequest extends FormRequest
             'parent_adresse' => 'required_without:parent_id|string|max:255',
             'relation' => 'required|in:mere,pere,frere,soeur,tuteur',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'est_affecte' => 'required|in:true,false,1,0',
         ];
     }
 

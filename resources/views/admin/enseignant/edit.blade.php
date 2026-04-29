@@ -17,28 +17,39 @@
                     @csrf
                     @method('PUT')
                     <div class="form-group">
-                        <label for="name">Nom *</label>
-                        <input type="text" name="nom" id="nom" class="form-control" value="{{ $enseignant->nom }}" required>
+                        <label for="nom">Nom *</label>
+                        <input type="text" name="nom" id="nom" class="form-control @error('nom') is-invalid @enderror" value="{{ $enseignant->nom }}" required>
+                        @error('nom')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group">
-                        <label for="name">Prenoms *</label>
-                        <input type="text" name="prenom" id="prenom" class="form-control" value="{{ $enseignant->prenom }}" required>
+                        <label for="prenom">Prenoms *</label>
+                        <input type="text" name="prenom" id="prenom" class="form-control @error('prenom') is-invalid @enderror" value="{{ $enseignant->prenom }}" required>
+                        @error('prenom')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group">
-                        <label for="name">Spécialité *</label>
-                        <input type="text" name="specialite" id="specialite" class="form-control" value="{{ $enseignant->specialite }}" required>
+                        <label for="specialite">Spécialité *</label>
+                        <input type="text" name="specialite" id="specialite" class="form-control @error('specialite') is-invalid @enderror" value="{{ $enseignant->specialite }}" required>
+                        @error('specialite')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group">
-                        <label for="name">Adresse  *</label>
-                        <input type="text" name="adresse" id="adresse" class="form-control" value="{{ $enseignant->adresse }}" required>   
+                        <label for="telephone">Téléphone *</label>
+                        <input type="text" name="telephone" id="telephone" class="form-control @error('telephone') is-invalid @enderror" value="{{ $enseignant->telephone }}" required>
+                        @error('telephone')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group">
-                        <label for="name">Téléphone *</label>
-                        <input type="text" name="telephone" id="telephone" class="form-control" value="{{ $enseignant->telephone }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Email *</label>
-                        <input type="email" name="email" id="email" class="form-control" value="{{ $enseignant->email }}" required>
+                        <label for="email">Email *</label>
+                        <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ $enseignant->email }}" required>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Enregistrer</button>

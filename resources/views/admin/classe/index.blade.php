@@ -130,6 +130,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-4 d-flex justify-content-center">
+                    {{ $allClasses->links() }}
+                </div>
             </div>
         </div>
     </div>

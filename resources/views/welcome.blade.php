@@ -168,8 +168,8 @@
             <div>
                  <h4 class="font-bold mb-4 text-gray-200">Contact</h4>
                 <ul class="space-y-2 text-sm text-gray-400">
-                    <li>support@sgs-school.com</li>
-                    <li>+221 33 800 00 00</li>
+                    {{-- <li>[EMAIL_ADDRESS]</li>
+                    <li>+225 77 787 41 24</li> --}}
                 </ul>
             </div>
         </div>
