@@ -79,8 +79,8 @@
                         <a class="navbar-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                             aria-expanded="false">
                             <div class="admin-title">
-                                <h5 class="item-title">{{ Auth::user()->name }}</h5>
-                                <span>{{ Auth::user()->role }}</span>
+                                <h5 class="item-title">{{ Auth::user()?->name }}</h5>
+                                <span>{{ Auth::user()?->role }}</span>
                             </div>
                             <div class="admin-img">
                                 <img src="img/figure/admin.jpg" alt="Admin">
@@ -88,7 +88,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <div class="item-header">
-                                <h6 class="item-title">{{ Auth::user()->name }}</h6>
+                                <h6 class="item-title">{{ Auth::user()?->name }}</h6>
                             </div>
                             <div class="item-content">
                                 <ul class="settings-list">
@@ -97,8 +97,8 @@
                                     <li><a href="#"><i
                                                 class="flaticon-chat-comment-oval-speech-bubble-with-text-lines"></i>Message</a>
                                     </li>
-                                    @if(auth()->user()->hasRole('Super Admin'))
-                                        <li><a href="{{ route('admin.user.edit', Auth::user()->id) }}"><i
+                                    @if(auth()->check() && auth()->user()->hasRole('Super Admin'))
+                                        <li><a href="{{ route('admin.user.edit', Auth::user()?->id) }}"><i
                                                     class="flaticon-gear-loading"></i>Paramètres du compte</a></li>
                                     @endif
 
@@ -221,7 +221,7 @@
                         </li>
                         @endrole
 
-                        @if(!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('enseignant') && !auth()->user()->hasRole('etudiant'))
+                        @if(auth()->check() && !auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('enseignant') && !auth()->user()->hasRole('etudiant'))
                             {{-- MENU SCOLAIRE (ADMIN ÉCOLE & STAFF) --}}
                             <li class="nav-item">
                                 <a href="{{ route('dashboard') }}" class="nav-link"><i

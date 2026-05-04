@@ -40,9 +40,9 @@
                     <a href="{{ url('/dashboard') }}" class="text-sm font-semibold text-gray-600 hover:text-sgs-blue">Dashboard</a>
                 @else
                     <a href="{{ route('login') }}" class="text-sm font-semibold text-gray-600 hover:text-sgs-blue px-4 py-2 hover:bg-gray-100 rounded-lg transition">Connexion</a>
-                    @if (Route::has('register'))
+                    {{-- @if (Route::has('register'))
                         <a href="{{ route('register') }}" class="text-sm font-semibold bg-sgs-yellow text-white px-4 py-2 rounded-lg hover:bg-yellow-500 transition shadow-sm">Inscription</a>
-                    @endif
+                    @endif --}}
                 @endauth
             @endif
         </div>
