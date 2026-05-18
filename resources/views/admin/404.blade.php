@@ -36,3 +36,6 @@
         </div>
     </div>
 @endsection
+
+
+//app_ecole/resources/views/admin/404.blade.php
