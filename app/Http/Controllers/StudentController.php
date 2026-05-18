@@ -13,6 +13,8 @@ use App\Http\Requests\StudentRequest;
 use Illuminate\Support\Facades\Gate;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class StudentController extends Controller
 {
@@ -52,7 +54,7 @@ class StudentController extends Controller
             });
         }
 
-        $etudiants = $query->orderBy('nom')->orderBy('prenom')->get();
+        $etudiants = $query->orderBy('nom')->orderBy('prenom')->paginate(10);
         $classes = \App\Models\Classe::orderBy('nom')->get();
 
         return view('admin.etudiant.index', compact('etudiants', 'classes', 'activeAnnee'));
@@ -77,7 +79,7 @@ class StudentController extends Controller
         try {
             DB::beginTransaction();
         $etudiant = Student::create(
-            $request->except('photo', 'parent_id', 'parent_nom', 'parent_prenom', 'parent_telephone', 'parent_email', 'parent_adresse', 'relation')
+            $request->except('photo', 'parent_id', 'parent_nom', 'parent_prenom', 'parent_telephone', 'parent_email', 'parent_adresse', 'relation', 'profession')
         );
 
         // 2️⃣ photo
@@ -103,34 +105,53 @@ class StudentController extends Controller
                     'telephone' => $request->parent_telephone,
                     'email' => $request->parent_email,
                     'adresse' => $request->parent_adresse,
+                    'profession' => $request->profession,
+                    'ecole_id' => $etudiant->ecole_id,
                 ]);
             }
             $parentId = $parent->id;
-        }   $etudiant->parents()->attach($parentId, [
+        }
+
+        $etudiant->parents()->attach($parentId, [
             'relation' => $request->relation,
         ]);
 
-        // 4️⃣ Création automatique du compte utilisateur
-        $password = strtolower($etudiant->nom) . '@' . $etudiant->matricule; // Règle par défaut
-        
-        $user = User::create([
-            'name'     => $etudiant->nom . ' ' . $etudiant->prenom,
-            'username' => $etudiant->matricule,
-            'email'    => $etudiant->email,
-            'password' => Hash::make($password),
-            'ecole_id' => $etudiant->ecole_id,
-            'must_change_password' => true,
-        ]);
+        $parent = \App\Models\Parents::find($parentId);
 
-        $user->assignRole('etudiant');
-        $etudiant->update(['user_id' => $user->id]);
+        // 4️⃣ Création/Récupération automatique du compte utilisateur pour le PARENT
+        if (!$parent->user_id) {
+            $password = $this->generPassword();
+            $userEmail = $parent->email ?? strtolower($parent->nom) . '.' . strtolower($parent->prenom) . "@school-parent.com";
+            
+            // On vérifie si l'email existe déjà (cas rare où un utilisateur a déjà cet email généré)
+            $existingUser = User::where('email', $userEmail)->orWhere('username', $parent->telephone)->first();
+            
+            if ($existingUser) {
+                $user = $existingUser;
+            } else {
+                $user = User::create([
+                    'name'     => $parent->nom . ' ' . $parent->prenom,
+                    'username' => $parent->telephone,
+                    'email'    => $userEmail,
+                    'password' => Hash::make($password),
+                    'ecole_id' => $etudiant->ecole_id,
+                    'must_change_password' => true,
+                ]);
+                $user->assignRole('parent');
+            }
+            
+            $parent->update(['user_id' => $user->id]);
+        } else {
+            $user = $parent->user;
+            $password = '******** (Déjà existant)';
+        }
 
         DB::commit();
 
         return redirect()->route('admin.etudiant.credentials', [
             'id' => $etudiant->id,
             'password' => $password
-        ])->with('success', 'Élève et compte utilisateur créés avec succès');
+        ])->with('success', 'Élève enregistré et compte parent configuré avec succès');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -189,7 +210,7 @@ class StudentController extends Controller
 
         // ✅ 2️⃣ mise à jour des champs
         $etudiant->update(
-            $request->except('photo', 'parent_id', 'relation')
+            $request->except('photo', 'parent_id', 'relation', 'profession')
         );
 
         // ✅ 3️⃣ mise à jour de la photo
@@ -243,9 +264,48 @@ class StudentController extends Controller
 
     public function credentials(Request $request)
     {
-        $etudiant = Student::findOrFail($request->id);
+        $etudiant = Student::with('parents')->findOrFail($request->id);
+        $parent = $etudiant->parents->first();
         $password = $request->password;
-        return view('admin.etudiant.credentials', compact('etudiant', 'password'));
+        return view('admin.etudiant.credentials', compact('etudiant', 'parent', 'password'));
+    }
+
+    public function exportFiche($id)
+    {
+        $etudiant = Student::with([
+            'parents',
+            'inscriptions.anneeScolaire',
+            'inscriptions.cycle',
+            'inscriptions.niveau',
+            'inscriptions.classe',
+            'ecole'
+        ])->findOrFail($id);
+
+        $ecole = $etudiant->ecole;
+        $inscription = $etudiant->inscriptions()
+            ->latest()
+            ->first();
+
+        // Financement
+        $inscriptionIds = $etudiant->inscriptions->pluck('id');
+        $factures = \App\Models\Facture::whereIn('inscription_id', $inscriptionIds)->get();
+        $totalDu = $factures->sum('montant_total');
+        $totalPaye = \App\Models\Payment::whereIn('facture_id', $factures->pluck('id'))->sum('montant');
+        
+        // Documents
+        $documents = \App\Models\StudentDocument::where('student_id', $id)->get();
+
+        $pdf = Pdf::loadView('admin.etudiant.fiche', compact(
+            'etudiant', 
+            'ecole', 
+            'inscription', 
+            'totalDu', 
+            'totalPaye', 
+            'factures',
+            'documents'
+        ));
+        
+        return $pdf->stream('fiche_' . $etudiant->nom . '_' . $etudiant->prenom . '.pdf');
     }
 
     /**
@@ -258,5 +318,10 @@ class StudentController extends Controller
         $etudiant->delete();
 
         return redirect()->route('admin.etudiant.index')->with('success', 'Eleve supprime avec succes');
+    }
+
+    private function generPassword($length = 8)
+    {
+        return Str::random($length);
     }
 }

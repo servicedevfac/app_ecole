@@ -79,8 +79,8 @@
                         <a class="navbar-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                             aria-expanded="false">
                             <div class="admin-title">
-                                <h5 class="item-title">{{ Auth::user()->name }}</h5>
-                                <span>{{ Auth::user()->role }}</span>
+                                <h5 class="item-title">{{ Auth::user()?->name }}</h5>
+                                <span>{{ Auth::user()?->role }}</span>
                             </div>
                             <div class="admin-img">
                                 <img src="img/figure/admin.jpg" alt="Admin">
@@ -88,17 +88,17 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <div class="item-header">
-                                <h6 class="item-title">{{ Auth::user()->name }}</h6>
+                                <h6 class="item-title">{{ Auth::user()?->name }}</h6>
                             </div>
                             <div class="item-content">
                                 <ul class="settings-list">
-                                    <li><a href="#"><i class="flaticon-user"></i>Mon Profil</a></li>
+                                    <li><a href="{{ auth()->user()->hasRole('parent') ? route('parent.profile') : '#' }}"><i class="flaticon-user"></i>Mon Profil</a></li>
                                     <li><a href="#"><i class="flaticon-list"></i>Tâches</a></li>
                                     <li><a href="#"><i
                                                 class="flaticon-chat-comment-oval-speech-bubble-with-text-lines"></i>Message</a>
                                     </li>
-                                    @if(auth()->user()->hasRole('Super Admin'))
-                                        <li><a href="{{ route('admin.user.edit', Auth::user()->id) }}"><i
+                                    @if(auth()->check() && auth()->user()->hasRole('Super Admin'))
+                                        <li><a href="{{ route('admin.user.edit', Auth::user()?->id) }}"><i
                                                     class="flaticon-gear-loading"></i>Paramètres du compte</a></li>
                                     @endif
 
@@ -193,35 +193,60 @@
                                     class="flaticon-script"></i><span>Bulletins & Notes</span></a>
                         </li>
                         @endrole
-                        @role('etudiant')
-                        {{-- MENU ÉLÈVE --}}
+                        @role('parent')
+                        {{-- MENU PARENT --}}
                         <li class="nav-item text-muted px-3 mt-3 mb-1"
                                 style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;">
-                                Mon Espace Élève
+                                Mon Espace Parent
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('student.dashboard') }}" class="nav-link"><i
+                            <a href="{{ route('parent.dashboard') }}" class="nav-link"><i
                                     class="flaticon-dashboard"></i><span>Tableau de bord</span></a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('student.notes') }}" class="nav-link"><i
-                                    class="flaticon-script"></i><span>Mes Notes</span></a>
+                            <a href="{{ route('parent.notes') }}" class="nav-link"><i
+                                    class="flaticon-script"></i><span>Notes de l'enfant</span></a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('student.emploi') }}" class="nav-link"><i
-                                    class="flaticon-calendar"></i><span>Mon Emploi du Temps</span></a>
+                            <a href="{{ route('parent.presences') }}" class="nav-link"><i
+                                    class="fas fa-user-check"></i><span>Présences & Absences</span></a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('student.factures') }}" class="nav-link"><i
-                                    class="flaticon-technological"></i><span>Mes Factures</span></a>
+                            <a href="{{ route('parent.emploi') }}" class="nav-link"><i
+                                    class="flaticon-calendar"></i><span>Emploi du Temps</span></a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('student.documents') }}" class="nav-link"><i
-                                    class="flaticon-copy"></i><span>Mes Documents</span></a>
+                            <a href="{{ route('parent.factures') }}" class="nav-link"><i
+                                    class="flaticon-technological"></i><span>Factures & Paiements</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('parent.documents') }}" class="nav-link"><i
+                                    class="flaticon-copy"></i><span>Documents</span></a>
+                        </li>
+                        @endrole
+                        @role('Comptable')
+                        {{-- MENU COMPTABLE --}}
+                        <li class="nav-item">
+                            <a href="{{ route('dashboard') }}" class="nav-link"><i
+                                    class="flaticon-dashboard"></i><span>Tableau de bord</span></a>
+                        </li>
+                        <li class="nav-item sidebar-nav-item">
+                            <a href="#" class="nav-link"><i
+                                    class="flaticon-technological"></i><span>Comptabilité</span></a>
+                            <ul class="nav sub-group-menu">
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.factures.index') }}" class="nav-link"><i
+                                            class="fas fa-angle-right"></i>Factures & Paiements</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('frais_scolaires.index') }}" class="nav-link"><i
+                                            class="fas fa-angle-right"></i>Configuration Frais</a>
+                                </li>
+                            </ul>
                         </li>
                         @endrole
 
-                        @if(!auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('enseignant') && !auth()->user()->hasRole('etudiant'))
+                        @if(auth()->check() && !auth()->user()->hasRole('Super Admin') && !auth()->user()->hasRole('enseignant') && !auth()->user()->hasRole('parent') && !auth()->user()->hasRole('Comptable'))
                             {{-- MENU SCOLAIRE (ADMIN ÉCOLE & STAFF) --}}
                             <li class="nav-item">
                                 <a href="{{ route('dashboard') }}" class="nav-link"><i
@@ -322,50 +347,8 @@
                                         class="fas fa-cogs"></i><span>Calendrier & Périodes</span></a>
                             </li>
                         @endif
-                        <!-- <li class="nav-item sidebar-nav-item">
-                            <a href="#" class="nav-link"><i class="flaticon-menu-1"></i><span>UI Elements</span></a>
-                            <ul class="nav sub-group-menu">
-                                <li class="nav-item">
-                                    <a href="{{ url('notification-alart.html') }}" class="nav-link"><i
-                                            class="fas fa-angle-right"></i>Alart</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('button.html') }}" class="nav-link"><i
-                                            class="fas fa-angle-right"></i>Button</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('grid.html') }}" class="nav-link"><i
-                                            class="fas fa-angle-right"></i>Grid</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('modal.html') }}" class="nav-link"><i
-                                            class="fas fa-angle-right"></i>Modal</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('progress-bar.html') }}" class="nav-link"><i
-                                            class="fas fa-angle-right"></i>Progress Bar</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('ui-tab.html') }}" class="nav-link"><i
-                                            class="fas fa-angle-right"></i>Tab</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('ui-widget.html') }}" class="nav-link"><i
-                                            class="fas fa-angle-right"></i>Widget</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('map.html') }}" class="nav-link"><i
-                                    class="flaticon-planet-earth"></i><span>Map</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('account-settings.html') }}" class="nav-link"><i
-                                    class="flaticon-settings"></i><span>Account</span></a>
-                        </li> -->
                     </ul>
                 </div>
-
                 <!-- Sidebar Area End Here -->
             </div>
             <div class="dashboard-content-one">
@@ -382,6 +365,11 @@
                 @if(session('success'))
                     <div class="alert alert-success">
                         {{ session('success') }}
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
                     </div>
                 @endif
                 @yield('content')

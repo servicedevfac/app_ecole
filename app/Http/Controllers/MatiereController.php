@@ -15,7 +15,7 @@ class MatiereController extends Controller
      */
     public function index()
     {
-        $matieres = Matiere::withCount('classes')->get();
+        $matieres = Matiere::withCount('classes')->paginate(10);
         $classes = Classe::all();
         return view('admin.matiere.index', compact('matieres', 'classes'));
     }

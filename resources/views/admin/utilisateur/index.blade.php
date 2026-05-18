@@ -82,6 +82,17 @@
             </div>
 
             <div class="table-responsive">
+                <div class="col-xl-3 col-lg-4 col-12 form-group">
+                    <label>Choisir une école</label>
+                    <form action="{{ route('admin.user.index') }}" method="GET">
+                        <select class="form-control search-input" name="ecole_id" id="ecole_id" onchange="this.form.submit()">
+                            <option value="">Toutes les écoles</option>
+                            @foreach ($ecoles as $ecole)
+                                <option value="{{ $ecole->id }}" {{ request('ecole_id') == $ecole->id ? 'selected' : '' }}>{{ $ecole->nom }}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                </div>
                 <table class="table display data-table text-nowrap" style="border-collapse: separate; border-spacing: 0 8px;">
                     <thead style="background-color: #f7fafc;">
                         <tr>
@@ -162,6 +173,9 @@
                         @endforelse
                     </tbody>
                 </table>
+                <div class="mt-4 d-flex justify-content-center">
+                    {{ $users->links() }}
+                </div>
             </div>
         </div>
     </div>

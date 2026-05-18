@@ -15,7 +15,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         Gate::authorize('utilisateurs.view');
         $query = User::with('ecole');
@@ -24,8 +24,13 @@ class UserController extends Controller
             $query->where('ecole_id', auth()->user()->ecole_id);
         }
 
-        $users = $query->get();
-        return view('admin.utilisateur.index', compact('users'));
+        if ($request->has('ecole_id')) {
+            $query->where('ecole_id', $request->ecole_id);
+        }
+
+        $users = $query->latest()->paginate(10);
+        $ecoles = Ecole::get();
+        return view('admin.utilisateur.index', compact('users', 'ecoles'));
     }
 
     /**

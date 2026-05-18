@@ -9,34 +9,40 @@ use App\Models\Enseignant;
 use App\Models\Horaire;
 use App\Models\Jour;
 use App\Models\Matiere;
+use App\Models\Niveau;
 use Illuminate\Http\Request;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class EmploiDuTempsController extends Controller
 {
-    /**
-     *  Export PDF par classe
-     */
     public function downloadPDFByClasse($id)
     {
         $classe = Classe::findOrFail($id);
         $annee = Annee_scolaire::active();
+        $jours = Jour::all();
+        $horaires = Horaire::orderBy('heure_debut')->get();
 
         $schedules = Emploi_du_temps::with(['matiere', 'enseignant', 'horaire', 'jour'])
             ->where('classe_id', $id)
-            ->orderBy('jours_id')
-            ->orderBy('horaire_id')
             ->get();
+
+        $grid = [];
+        foreach ($schedules as $s) {
+            $grid[$s->horaire_id][$s->jours_id] = $s;
+        }
 
         $data = [
             'schedules' => $schedules,
             'title' => 'Classe: ' . $classe->nom,
             'type' => 'classe',
-            'annee' => $annee
+            'annee' => $annee,
+            'jours' => $jours,
+            'horaires' => $horaires,
+            'grid' => $grid
         ];
 
-        $pdf = Pdf::loadView('admin.emploi_du_temps.pdf', $data);
+        $pdf = Pdf::loadView('admin.emploi_du_temps.pdf', $data)->setPaper('a4', 'landscape');
         return $pdf->download('emploi_du_temps_' . $classe->nom . '.pdf');
     }
 
@@ -47,43 +53,49 @@ class EmploiDuTempsController extends Controller
     {
         $enseignant = Enseignant::findOrFail($id);
         $annee = Annee_scolaire::active();
+        $jours = Jour::all();
+        $horaires = Horaire::orderBy('heure_debut')->get();
 
         $schedules = Emploi_du_temps::with(['matiere', 'classe', 'horaire', 'jour'])
             ->where('enseignant_id', $id)
-            ->orderBy('jours_id')
-            ->orderBy('horaire_id')
             ->get();
+
+        $grid = [];
+        foreach ($schedules as $s) {
+            $grid[$s->horaire_id][$s->jours_id] = $s;
+        }
 
         $data = [
             'schedules' => $schedules,
             'title' => 'Enseignant: ' . $enseignant->nom . ' ' . $enseignant->prenom,
             'type' => 'enseignant',
-            'annee' => $annee
+            'annee' => $annee,
+            'jours' => $jours,
+            'horaires' => $horaires,
+            'grid' => $grid
         ];
 
-        $pdf = Pdf::loadView('admin.emploi_du_temps.pdf', $data);
+        $pdf = Pdf::loadView('admin.emploi_du_temps.pdf', $data)->setPaper('a4', 'landscape');
         return $pdf->download('emploi_du_temps_' . $enseignant->nom . '.pdf');
     }
 
 
     public function index(Request $request)
     {
-        $query = Emploi_du_temps::with(['classe', 'matiere', 'enseignant', 'anneeScolaire', 'horaire', 'jour']);
+        $niveaux = Niveau::all();
+        $query = Classe::with('niveau')->withCount('emploisDuTemps');
 
-        if ($request->classe_id) {
-            $query->where('classe_id', $request->classe_id);
+        if ($request->search) {
+            $query->where('nom', 'like', '%' . $request->search . '%');
         }
 
-        if ($request->enseignant_id) {
-            $query->where('enseignant_id', $request->enseignant_id);
+        if ($request->niveau_id) {
+            $query->where('niveau_id', $request->niveau_id);
         }
 
-        $emploi_du_temps = $query
-            ->orderBy('jours_id')
-            ->orderBy('horaire_id')
-            ->get();
+        $classes = $query->orderBy('nom')->get();
 
-        return view('admin.emploi_du_temps.index', compact('emploi_du_temps'));
+        return view('admin.emploi_du_temps.index', compact('classes', 'niveaux'));
     }
 
     /**
@@ -258,13 +270,21 @@ class EmploiDuTempsController extends Controller
      */
     public function byClasse($id)
     {
+        $classe = Classe::findOrFail($id);
+        $jours = Jour::all();
+        $horaires = Horaire::orderBy('heure_debut')->get();
+        
         $schedules = Emploi_du_temps::with(['matiere', 'enseignant', 'horaire', 'jour'])
             ->where('classe_id', $id)
-            ->orderBy('jours_id')
-            ->orderBy('horaire_id')
             ->get();
 
-        return view('admin.emploi_du_temps.by-classe', compact('schedules'));
+        // Organiser les données pour la grille [horaire_id][jour_id]
+        $grid = [];
+        foreach ($schedules as $s) {
+            $grid[$s->horaire_id][$s->jours_id] = $s;
+        }
+
+        return view('admin.emploi_du_temps.by-classe', compact('schedules', 'classe', 'jours', 'horaires', 'grid'));
     }
 
     /**
@@ -272,13 +292,20 @@ class EmploiDuTempsController extends Controller
      */
     public function byTeacher($id)
     {
-        $schedules = Emploi_du_temps::with(['classe', 'matiere', 'enseignant', 'horaire', 'jour'])
+        $enseignant = Enseignant::findOrFail($id);
+        $jours = Jour::all();
+        $horaires = Horaire::orderBy('heure_debut')->get();
+
+        $schedules = Emploi_du_temps::with(['classe', 'matiere', 'horaire', 'jour'])
             ->where('enseignant_id', $id)
-            ->orderBy('jours_id')
-            ->orderBy('horaire_id')
             ->get();
 
-        return view('admin.emploi_du_temps.by-teacher', compact('schedules'));
+        $grid = [];
+        foreach ($schedules as $s) {
+            $grid[$s->horaire_id][$s->jours_id] = $s;
+        }
+
+        return view('admin.emploi_du_temps.by-teacher', compact('schedules', 'enseignant', 'jours', 'horaires', 'grid'));
     }
 
     /**
@@ -300,11 +327,23 @@ class EmploiDuTempsController extends Controller
      */
     public function getTeachersByClasseAndMatiere(Request $request)
     {
+        $user = auth()->user();
         $matiere_id = $request->matiere_id;
+        $classe_id = $request->classe_id;
 
-        $teachers = \App\Models\AffectationsPedagogiques::with('enseignant')
-            ->where('matiere_id', $matiere_id)
-            ->get()
+        $query = \App\Models\AffectationsPedagogiques::with('enseignant')
+            ->where('matiere_id', $matiere_id);
+
+        if ($classe_id) {
+            $query->where('classe_id', $classe_id);
+        }
+
+        // Si l'utilisateur est un enseignant, il ne peut voir que lui-même
+        if ($user && $user->enseignant) {
+            $query->where('enseignant_id', $user->enseignant->id);
+        }
+
+        $teachers = $query->get()
             ->map(function($affectation) {
                 return [
                     'id' => $affectation->enseignant->id,

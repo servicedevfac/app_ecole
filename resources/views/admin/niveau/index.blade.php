@@ -124,6 +124,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-4 d-flex justify-content-center">
+                    {{ $niveaux->links() }}
+                </div>
             </div>
         </div>
     </div>

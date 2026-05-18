@@ -8,8 +8,8 @@
             <h3 class="mb-1 font-weight-bold" style="color: #111111;">Configuration Scolaire</h3>
             <ul class="d-flex align-items-center p-0" style="list-style: none; font-size: 0.9rem;">
                 <li><a href="{{ route('dashboard') }}" class="text-muted">Accueil</a></li>
-                <li class="mx-2 text-muted">/</li>
-                <li class="text-orange-peel font-weight-bold">Paramètres Globaux</li>
+               
+                <li class="text-orange-peel font-weight-bold"> Paramètres Globaux</li>
             </ul>
         </div>
         <div class="header-elements">
@@ -169,9 +169,9 @@
                             </a>
                         </div>
                         <div class="col-md-4 col-sm-6 mb-4">
-                            <a href="{{ route('frais_scolaires.index') }}" class="akkhor-quick-link bg-light-blue text-dodger-blue hover-lift shadow-sm">
+                            <a href="{{ route('admin.periodes.index') }}" class="akkhor-quick-link bg-light-blue text-dodger-blue hover-lift shadow-sm">
                                 <i class="flaticon-script mb-2 text-24"></i>
-                                <span class="font-bold small">FRAIS</span>
+                                <span class="font-bold small">PERIODE</span>
                             </a>
                         </div>
                     </div>
@@ -234,7 +234,7 @@
                                 <tr class="bg-ash">
                                     <th class="px-3">#</th>
                                     <th>Niveau</th>
-                                    <th>Cycle parent</th>
+                                    <th>Cycle</th>
                                     <th class="text-right">Action</th>
                                 </tr>
                             </thead>

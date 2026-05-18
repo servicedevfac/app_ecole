@@ -11,7 +11,7 @@ class PeriodeController extends Controller
 {
     public function index()
     {
-        $periodes = Periode::with('anneeScolaire')->get();
+        $periodes = Periode::with('anneeScolaire')->paginate(10);
         return view('admin.periodes.index', compact('periodes'));
     }
 

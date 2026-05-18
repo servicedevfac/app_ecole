@@ -13,7 +13,7 @@ class NiveauController extends Controller
      */
     public function index()
     {
-        $niveaux = Niveau::with(['cycle', 'classes'])->get();
+        $niveaux = Niveau::with(['cycle', 'classes'])->paginate(10);
         return view('admin.niveau.index', compact('niveaux'));
     }
 

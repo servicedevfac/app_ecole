@@ -238,6 +238,9 @@
                                             <a class="dropdown-item" href="{{ route('admin.etudiant.show', $etudiant->id) }}">
                                                 <i class="fas fa-eye text-primary mr-2"></i> Profil complet
                                             </a>
+                                            <a class="dropdown-item" href="{{ route('admin.etudiant.fiche', $etudiant->id) }}" target="_blank">
+                                                <i class="fas fa-print text-warning mr-2"></i> Fiche élève
+                                            </a>
                                             <a class="dropdown-item" href="{{ route('admin.etudiant.documents.index', $etudiant->id) }}">
                                                 <i class="fas fa-file-alt text-info mr-2"></i> Documents
                                             </a>
@@ -276,6 +279,9 @@
                         @endforelse
                     </tbody>
                 </table>
+                <div class="mt-4 d-flex justify-content-center">
+                    {{ $etudiants->links() }}
+                </div>
             </div>
         </div>
     </div>

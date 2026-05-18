@@ -19,18 +19,18 @@
         <div class="card-body">
             <div class="heading-layout1">
                 <div class="item-title">
-                    <h3>Compte Utilisateur Créé</h3>
+                    <h3>Compte Parent Créé / Configuré</h3>
                 </div>
             </div>
             
             <div class="alert alert-success">
-                L'élève <strong>{{ $etudiant->nom }} {{ $etudiant->prenom }}</strong> a été enregistré avec succès.
+                L'élève <strong>{{ $etudiant->nom }} {{ $etudiant->prenom }}</strong> a été enregistré. Le compte d'accès a été rattaché au parent : <strong>{{ $parent->nom }} {{ $parent->prenom }}</strong>.
             </div>
 
             <div class="ui-alart-box">
                 <div class="dismiss-alart">
                     <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                        <strong>Important !</strong> Veuillez noter ou imprimer ces identifiants pour les remettre à l'élève.
+                        <strong>Important !</strong> Veuillez remettre ces identifiants au parent pour qu'il puisse suivre la scolarité de son enfant.
                     </div>
                 </div>
             </div>
@@ -39,12 +39,12 @@
                 <table class="table display data-table text-nowrap">
                     <tbody>
                         <tr>
-                            <td class="font-bold">Nom complet :</td>
-                            <td>{{ $etudiant->nom }} {{ $etudiant->prenom }}</td>
+                            <td class="font-bold">Nom du parent :</td>
+                            <td>{{ $parent->nom }} {{ $parent->prenom }}</td>
                         </tr>
                         <tr>
-                            <td class="font-bold">Matricule (Identifiant) :</td>
-                            <td><span class="badge badge-primary" style="font-size: 1.2rem;">{{ $etudiant->matricule }}</span></td>
+                            <td class="font-bold">Identifiant (Téléphone) :</td>
+                            <td><span class="badge badge-primary" style="font-size: 1.2rem;">{{ $parent->telephone }}</span></td>
                         </tr>
                         <tr>
                             <td class="font-bold">Mot de passe temporaire :</td>

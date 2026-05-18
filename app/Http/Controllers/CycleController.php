@@ -12,7 +12,7 @@ class CycleController extends Controller
      */
     public function index()
     {
-        $cycles = Cycle::with('niveaux')->get();
+        $cycles = Cycle::with('niveaux')->paginate(10);
         return view('admin.cycle.index', compact('cycles'));
     }
 

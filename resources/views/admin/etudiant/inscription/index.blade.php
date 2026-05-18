@@ -139,6 +139,9 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="mt-4 d-flex justify-content-center">
+                {{ $inscriptions->links() }}
+            </div>
         </div>
 
     </div>

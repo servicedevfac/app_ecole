@@ -114,6 +114,9 @@
                                     <a href="{{ route('admin.classe.show', $classe->id) }}" class="btn btn-sm bg-light text-blue border-blue" title="Voir détails">
                                         <i class="fas fa-eye"></i>
                                     </a>
+                                    <a href="{{ route('admin.classe.export_students', $classe->id) }}" class="btn btn-sm bg-light text-warning border-warning" title="Exporter la liste des élèves">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
                                     <a href="{{ route('admin.classe.edit', $classe->id) }}" class="btn btn-sm bg-light text-success border-success" title="Modifier">
                                         <i class="fas fa-edit"></i>
                                     </a>
@@ -130,6 +133,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-4 d-flex justify-content-center">
+                    {{ $allClasses->links() }}
+                </div>
             </div>
         </div>
     </div>

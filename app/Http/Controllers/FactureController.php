@@ -12,10 +12,26 @@ class FactureController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         Gate::authorize('paiements.view');
-        $factures = Facture::with(['inscription.student', 'inscription.classe'])->orderBy('created_at', 'desc')->get();
+        
+        $query = Facture::with(['inscription.student', 'inscription.classe']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('inscription.student', function($q) use ($search) {
+                $q->where('nom', 'like', "%{$search}%")
+                  ->orWhere('prenom', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('statut')) {
+            $query->where('statut', $request->statut);
+        }
+
+        $factures = $query->orderBy('created_at', 'desc')->paginate(10);
+        
         return view('admin.factures.index', compact('factures'));
     }
 

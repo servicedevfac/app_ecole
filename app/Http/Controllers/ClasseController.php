@@ -7,7 +7,10 @@ use App\Models\Emploi_du_temps;
 use App\Models\Inscription;
 use App\Models\Niveau;
 use App\Models\Student;
+use App\Models\Ecole;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Str;
 
 
 class ClasseController extends Controller
@@ -17,7 +20,7 @@ class ClasseController extends Controller
      */
     public function index()
     {
-        $allClasses = Classe::with(['niveau', 'inscriptions'])->get();
+        $allClasses = Classe::with(['niveau', 'inscriptions'])->paginate(10);
         $niveaux = Niveau::all();
         return view('admin.classe.index', compact('allClasses','niveaux'));
     }
@@ -161,5 +164,28 @@ class ClasseController extends Controller
 
         $classe->delete();
         return redirect()->route('admin.classe.index')->with('success', 'Classe supprimée avec succès');   
+    }
+
+    /**
+     * Export the student list for a class.
+     */
+    public function exportStudentList(string $id)
+    {
+        $classe = Classe::with(['niveau'])->findOrFail($id);
+        $etudiants = Inscription::where('classe_id', $id)
+            ->where('status', 'inscrite')
+            ->with('student')
+            ->get()
+            ->pluck('student')
+            ->sortBy('nom');
+
+        // l'ecole de l'utilisateur connecté
+        $ecole = auth()->user()->ecole;
+       
+
+        $pdf = Pdf::loadView('admin.classe.export_list', compact('classe', 'etudiants', 'ecole'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download('Liste_Classe_' . str_replace(' ', '_', $classe->nom) . '.pdf');
     }
 }

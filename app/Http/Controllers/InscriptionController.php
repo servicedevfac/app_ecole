@@ -36,7 +36,7 @@ class InscriptionController extends Controller
             $query->where('status', $request->status);
         }
 
-        $inscriptions = $query->orderBy('created_at', 'desc')->get();
+        $inscriptions = $query->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.etudiant.inscription.index', compact('inscriptions'));
     }
     /**

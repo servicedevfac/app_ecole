@@ -13,10 +13,13 @@
         </ul>
     </div>
     <!-- Breadcubs Area End Here -->
-    <!-- All Subjects Area Start Here -->
+    <!-- All Subjects Area Start Here -->  
+    
     <div class="row">
-        <div class="col-4-xxxl col-12">
+        @role('enseignant')
+        <div class="col-12-xxxl col-12">
             <div class="card height-auto">
+              
                 <div class="card-body">
                     <div class="heading-layout1">
                         <div class="item-title">
@@ -67,14 +70,20 @@
                             </div>
                             <div class="col-xl-6 col-lg-6 col-6 form-group">
                                 <label>Enseignant *</label>
-                                <select name="enseignant_id" class="select2" required id="enseignantSelect">
-                                    <option value="" disabled selected>Choisissez un enseignant</option>
-                                    @foreach($enseignants as $enseignant)
-                                        <option value="{{$enseignant->id}}" {{ old('enseignant_id') == $enseignant->id ? 'selected' : '' }}>
-                                            {{$enseignant->nom}} {{$enseignant->prenom}}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                @if(auth()->user()->enseignant)
+                                    <select name="enseignant_id" class="select2" required readonly>
+                                        <option value="{{ auth()->user()->enseignant->id }}">{{ auth()->user()->enseignant->nom }} {{ auth()->user()->enseignant->prenom }}</option>
+                                    </select>
+                                @else
+                                    <select name="enseignant_id" class="select2" required id="enseignantSelect">
+                                        <option value="" disabled selected>Choisissez un enseignant</option>
+                                        @foreach($enseignants as $enseignant)
+                                            <option value="{{$enseignant->id}}" {{ old('enseignant_id') == $enseignant->id ? 'selected' : '' }}>
+                                                {{$enseignant->nom}} {{$enseignant->prenom}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                @endif
                             </div>
 
                             <!-- Classe -->
@@ -126,12 +135,14 @@
                                     class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
                                 <button type="reset" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button>
                             </div>
-                        </div>
+                        </div>a
                     </form>
                 </div>
+             
             </div>
-        </div>
-        <div class="col-8-xxxl col-12">
+        </div>   
+        @endrole
+        <div class="col-12-xxxl col-12">
             <div class="card height-auto">
                 <div class="card-body">
                     <div class="heading-layout1">
@@ -152,17 +163,70 @@
                     </div>
                     <form class="mg-b-20">
                         <div class="row gutters-8">
-                            <div class="col-lg-4 col-12 form-group">
-                                <input type="text" placeholder="Search by Exam ..." class="form-control">
+                            <div class="col-lg-3 col-12 form-group">
+                                <select name="classe_id" class="form-control select2">
+                                    <option value="">Toutes les classes</option>
+                                    @foreach($classes as $classe)
+                                        <option value="{{ $classe->id }}" {{ request('classe_id') == $classe->id ? 'selected' : '' }}>
+                                            {{ $classe->nom }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-lg-3 col-12 form-group">
-                                <input type="text" placeholder="Search by Subject ..." class="form-control">
+                                <select name="matiere_id" class="form-control select2">
+                                    <option value="">Toutes les matières</option>
+                                    @foreach($matieres as $matiere)
+                                        <option value="{{ $matiere->id }}" {{ request('matiere_id') == $matiere->id ? 'selected' : '' }}>
+                                            {{ $matiere->nom }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-lg-3 col-12 form-group">
-                                <input type="text" placeholder="dd/mm/yyyy" class="form-control">
+                                <select name="enseignant_id" class="form-control select2">
+                                    @if(auth()->user()->enseignant)
+                                        <option value="{{ auth()->user()->enseignant->id }}">{{ auth()->user()->enseignant->nom }} {{ auth()->user()->enseignant->prenom }}</option>
+                                    @else
+                                        <option value="">Tous les enseignants</option>
+                                        @foreach($enseignants as $enseignant)
+                                            <option value="{{ $enseignant->id }}" {{ request('enseignant_id') == $enseignant->id ? 'selected' : '' }}>
+                                                {{ $enseignant->nom }} {{ $enseignant->prenom }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-12 form-group">
+                                <select name="periode_id" class="form-control select2">
+                                    <option value="">Toutes les périodes</option>
+                                    @foreach($periodes as $periode)
+                                        <option value="{{ $periode->id }}" {{ request('periode_id') == $periode->id ? 'selected' : '' }}>
+                                            {{ $periode->nom }} ({{ $periode->anneeScolaire->annee }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-12 form-group">
+                                <select name="type" class="form-control select2">
+                                    <option value="">Tous les types</option>
+                                    <option value="Devoir" {{ request('type') == 'Devoir' ? 'selected' : '' }}>Devoir</option>
+                                    <option value="Examen" {{ request('type') == 'Examen' ? 'selected' : '' }}>Examen</option>
+                                    <option value="Interrogation" {{ request('type') == 'Interrogation' ? 'selected' : '' }}>Interrogation</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-12 form-group">
+                                <select name="statut" class="form-control select2">
+                                    <option value="">Tous les statuts</option>
+                                    <option value="brouillon" {{ request('statut') == 'brouillon' ? 'selected' : '' }}>Brouillon</option>
+                                    <option value="validee" {{ request('statut') == 'validee' ? 'selected' : '' }}>Validée</option>
+                                </select>
                             </div>
                             <div class="col-lg-2 col-12 form-group">
-                                <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
+                                <button type="submit" class="fw-btn-fill btn-gradient-yellow">Rechercher</button>
+                            </div>
+                            <div class="col-lg-2 col-12 form-group">
+                                <a href="{{ route("admin.evaluations.index") }}" class="fw-btn-fill btn-gradient-yellow">Réinitialiser</a>
                             </div>
                         </div>
                     </form>
@@ -260,6 +324,9 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="mt-4 d-flex justify-content-center">
+                            {{ $evaluations->links() }}
+                        </div>
                     </div>
                 </div>
             </div>

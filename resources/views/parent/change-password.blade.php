@@ -6,7 +6,7 @@
         <h3>Changement de mot de passe</h3>
         <ul>
             <li>
-                <a href="{{ route('student.dashboard') }}">Accueil</a>
+                <a href="{{ route('parent.dashboard') }}">Accueil</a>
             </li>
             <li>Modification du mot de passe</li>
         </ul>
@@ -41,7 +41,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('student.password.update') }}" method="POST" class="new-added-form">
+                    <form action="{{ route('parent.password.update') }}" method="POST" class="new-added-form">
                         @csrf
                         <div class="row">
                             <div class="col-12 col-md-4 mg-b-20">
@@ -66,7 +66,7 @@
                             <div class="col-12 mg-t-8">
                                 <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluewood">Enregistrer les changements</button>
                                 @if(!auth()->user()->must_change_password)
-                                    <a href="{{ route('student.dashboard') }}" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Annuler</a>
+                                    <a href="{{ route('parent.dashboard') }}" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Annuler</a>
                                 @endif
                             </div>
                         </div>

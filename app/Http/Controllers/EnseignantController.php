@@ -6,8 +6,7 @@ use App\Models\Enseignant;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-
-
+use Illuminate\Support\Str;
 
 class EnseignantController extends Controller
 {
@@ -16,7 +15,7 @@ class EnseignantController extends Controller
      */
     public function index()
     {
-        $enseignants = Enseignant::all();
+        $enseignants = Enseignant::paginate(10);
         return view('admin.enseignant.index', compact('enseignants'));
     }
 
@@ -33,26 +32,34 @@ class EnseignantController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $request->validate([
-                'nom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-]+$/',
-                'prenom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-]+$/',
-                'telephone' => 'required|string|regex:/^[\+]?[0-9\-\(\)\s]+$/|max:20',
-                'email' => 'required|email|unique:enseignants,email|max:255',
-                'specialite' => 'required|string|max:255',
+        $request->validate([
+            'nom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-\']+$/',
+            'prenom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-\']+$/',
+            'telephone' => 'required|string|regex:/^[\+]?[0-9\-\(\)\s]+$/|max:20',
+            'email' => 'required|email|unique:enseignants,email|unique:users,email|max:255',
+            'specialite' => 'required|string|max:255',
+        ]);
 
-            ]);
+        try {
+            \DB::beginTransaction();
+
+            // Génération d'un mot de passe aléatoire
+            $password = Str::random(8);
+
+            // 1. Créer le compte utilisateur
             $user = User::create([
-                'name' => $request->input('nom'),
+                'name' => $request->input('nom') . ' ' . $request->input('prenom'),
                 'email' => $request->input('email'),
-                'password' => Hash::make('123456'),
+                'username' => $request->input('email'),
+                'password' => Hash::make($password),
+                'ecole_id' => auth()->user()->ecole_id,
                 'must_change_password' => true,
             ]);
 
             $user->assignRole('enseignant');
 
-
-            $enseignant = Enseignant::create([
+            // 2. Créer l'enseignant
+            Enseignant::create([
                 'user_id' => $user->id,
                 'nom' => $request->input('nom'),
                 'prenom' => $request->input('prenom'),
@@ -60,12 +67,16 @@ class EnseignantController extends Controller
                 'email' => $request->input('email'),
                 'specialite' => $request->input('specialite'),
                 'statut' => 'actif',
+                'ecole_id' => auth()->user()->ecole_id,
             ]);
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
 
-        return redirect()->route('admin.enseignant.index')->with('success', 'Enseignant ajoute avec succes');
+            \DB::commit();
+            return redirect()->route('admin.enseignant.index')->with('success', "Enseignant et compte utilisateur créés avec succès. Mot de passe généré : $password");
+
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()->with('error', 'Erreur lors de l\'ajout : ' . $e->getMessage())->withInput();
+        }
     }
 
     /**
@@ -91,19 +102,34 @@ class EnseignantController extends Controller
      */
     public function update(Request $request, Enseignant $enseignant)
     {
-        //
         $request->validate([
-            'nom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-]+$/',
-            'prenom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-]+$/',
+            'nom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-\']+$/',
+            'prenom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-\']+$/',
             'telephone' => 'required|string|regex:/^[\+]?[0-9\-\(\)\s]+$/|max:20',
-            'email' => 'required|email|unique:enseignants,email,' . $enseignant->id . ',id|max:255',
+            'email' => 'required|email|unique:enseignants,email,' . $enseignant->id . '|unique:users,email,' . ($enseignant->user_id ?? 0) . '|max:255',
             'specialite' => 'required|string|max:255',
-
         ]);
 
-        $enseignant->update($request->all());
+        try {
+            \DB::beginTransaction();
 
-        return redirect()->route('admin.enseignant.index')->with('success', 'Enseignant modifie avec succes');
+            $enseignant->update($request->all());
+
+            if ($enseignant->user) {
+                $enseignant->user->update([
+                    'name' => $request->nom . ' ' . $request->prenom,
+                    'email' => $request->email,
+                    'username' => $request->email,
+                ]);
+            }
+
+            \DB::commit();
+            return redirect()->route('admin.enseignant.index')->with('success', 'Enseignant et compte utilisateur modifiés avec succès');
+
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()->with('error', 'Erreur lors de la modification : ' . $e->getMessage())->withInput();
+        }
     }
 
     /**
