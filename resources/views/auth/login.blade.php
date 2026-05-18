@@ -30,13 +30,13 @@
 <body>
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
-    <!-- Preloader End Here -->
+    <!-- Preloader End Here --> 
     <!-- Login Page Start Here -->
     <div class="login-page-wrap">
         <div class="login-page-content">
             <div class="login-box ">
                 <div class="item-logo">
-                    <img src="img/logo2.png" alt="logo">
+                    <img src="img/logo112.png" alt="logo">
                 </div>
                 <form action="{{ route('login') }}" method="POST" class="login-form ">
                     @csrf

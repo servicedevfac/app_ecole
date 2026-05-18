@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class StudentController extends Controller
 {
@@ -78,7 +79,7 @@ class StudentController extends Controller
         try {
             DB::beginTransaction();
         $etudiant = Student::create(
-            $request->except('photo', 'parent_id', 'parent_nom', 'parent_prenom', 'parent_telephone', 'parent_email', 'parent_adresse', 'relation')
+            $request->except('photo', 'parent_id', 'parent_nom', 'parent_prenom', 'parent_telephone', 'parent_email', 'parent_adresse', 'relation', 'profession')
         );
 
         // 2️⃣ photo
@@ -104,6 +105,8 @@ class StudentController extends Controller
                     'telephone' => $request->parent_telephone,
                     'email' => $request->parent_email,
                     'adresse' => $request->parent_adresse,
+                    'profession' => $request->profession,
+                    'ecole_id' => $etudiant->ecole_id,
                 ]);
             }
             $parentId = $parent->id;
@@ -207,7 +210,7 @@ class StudentController extends Controller
 
         // ✅ 2️⃣ mise à jour des champs
         $etudiant->update(
-            $request->except('photo', 'parent_id', 'relation')
+            $request->except('photo', 'parent_id', 'relation', 'profession')
         );
 
         // ✅ 3️⃣ mise à jour de la photo
@@ -265,6 +268,44 @@ class StudentController extends Controller
         $parent = $etudiant->parents->first();
         $password = $request->password;
         return view('admin.etudiant.credentials', compact('etudiant', 'parent', 'password'));
+    }
+
+    public function exportFiche($id)
+    {
+        $etudiant = Student::with([
+            'parents',
+            'inscriptions.anneeScolaire',
+            'inscriptions.cycle',
+            'inscriptions.niveau',
+            'inscriptions.classe',
+            'ecole'
+        ])->findOrFail($id);
+
+        $ecole = $etudiant->ecole;
+        $inscription = $etudiant->inscriptions()
+            ->latest()
+            ->first();
+
+        // Financement
+        $inscriptionIds = $etudiant->inscriptions->pluck('id');
+        $factures = \App\Models\Facture::whereIn('inscription_id', $inscriptionIds)->get();
+        $totalDu = $factures->sum('montant_total');
+        $totalPaye = \App\Models\Payment::whereIn('facture_id', $factures->pluck('id'))->sum('montant');
+        
+        // Documents
+        $documents = \App\Models\StudentDocument::where('student_id', $id)->get();
+
+        $pdf = Pdf::loadView('admin.etudiant.fiche', compact(
+            'etudiant', 
+            'ecole', 
+            'inscription', 
+            'totalDu', 
+            'totalPaye', 
+            'factures',
+            'documents'
+        ));
+        
+        return $pdf->stream('fiche_' . $etudiant->nom . '_' . $etudiant->prenom . '.pdf');
     }
 
     /**

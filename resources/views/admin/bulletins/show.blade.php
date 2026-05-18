@@ -23,8 +23,13 @@
                         ({{ $annee->annee }}{{ $periode ? ' - ' . $periode->nom : '' }})</h3>
                 </div>
                 <div class="dropdown">
-                    <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">...</a>
+                    <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                        aria-expanded="false">...</a>
                     <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item"
+                            href="{{ route('admin.bulletins.download_all', ['classe' => $classe->id, 'periode_id' => $periode ? $periode->id : null, 'annee_scolaire_id' => $annee->id]) }}">
+                            <i class="fas fa-file-download text-primary"></i> Télécharger tous (ZIP)
+                        </a>
                         <a class="dropdown-item" href="#"><i class="fas fa-print"></i> Imprimer</a>
                         <a class="dropdown-item"
                             href="{{ route('admin.bulletins.index', ['periode_id' => $periode ? $periode->id : null]) }}"><i
@@ -70,6 +75,13 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            
+            <div class="mb-4 text-right">
+                <a href="{{ route('admin.bulletins.download_all', ['classe' => $classe->id, 'periode_id' => $periode ? $periode->id : null, 'annee_scolaire_id' => $annee->id]) }}"
+                    class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">
+                    <i class="fas fa-file-download mr-2"></i> Télécharger tous les bulletins (ZIP)
+                </a>
             </div>
 
             <div class="table-responsive">

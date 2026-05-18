@@ -8,9 +8,7 @@
             <h3 class="mb-1 font-weight-bold" style="color: #2c3e50;">{{ $classe->nom }}</h3>
             <ul class="d-flex align-items-center p-0" style="list-style: none; font-size: 0.9rem;">
                 <li><a href="{{ route('dashboard') }}" class="text-muted">Tableau de bord</a></li>
-                <li class="mx-2 text-muted">/</li>
                 <li><a href="{{ route('admin.classe.index') }}" class="text-muted">Classes</a></li>
-                <li class="mx-2 text-muted">/</li>
                 <li class="text-primary font-weight-600">Détails</li>
             </ul>
         </div>
@@ -27,7 +25,7 @@
                         <i class="fas fa-ellipsis-v"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right shadow-lg border-0 border-radius-10 mt-2">
-                        <a class="dropdown-item py-2" href="#"><i class="fas fa-file-pdf text-danger mr-2"></i>Exporter PDF</a>
+                        <a class="dropdown-item py-2" href="{{ route('admin.classe.export_students', $classe->id) }}"><i class="fas fa-file-pdf text-danger mr-2"></i>Exporter PDF</a>
                         <a class="dropdown-item py-2" href="#"><i class="fas fa-file-excel text-success mr-2"></i>Exporter Excel</a>
                         <div class="dropdown-divider"></div>
                         <form action="{{ route('admin.classe.destroy', $classe->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer cette classe ?');">

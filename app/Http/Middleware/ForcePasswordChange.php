@@ -18,8 +18,8 @@ class ForcePasswordChange
     {
         if (Auth::check() && Auth::user()->must_change_password) {
             // Ne pas rediriger si on est déjà sur la page de changement de mot de passe ou si on se déconnecte
-            if (!$request->routeIs('student.password.change', 'student.password.update', 'logout')) {
-                return redirect()->route('student.password.change')
+            if (!$request->routeIs('parent.password.change', 'parent.password.update', 'logout')) {
+                return redirect()->route('parent.password.change')
                     ->with('warning', 'Vous devez changer votre mot de passe pour continuer.');
             }
         }

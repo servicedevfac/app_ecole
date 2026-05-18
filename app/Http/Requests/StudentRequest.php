@@ -44,7 +44,22 @@ class StudentRequest extends FormRequest
             'parent_adresse' => 'required_without:parent_id|string|max:255',
             'relation' => 'required|in:mere,pere,frere,soeur,tuteur',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'est_affecte' => 'required|in:true,false,1,0',
+            'est_affecte' => 'required',
+            'lieu_naissance' => 'nullable|string|max:255',
+            'nationalite' => 'nullable|string|max:255',
+            'cni_extrait_numero' => 'nullable|string|max:255',
+            'filiere_serie' => 'nullable|string|max:255',
+            'etablissement_precedent' => 'nullable|string|max:255',
+            'statut_inscription' => 'nullable|string|max:255',
+            'groupe_promotion' => 'nullable|string|max:255',
+            'groupe_sanguin' => 'nullable|string|max:10',
+            'allergies' => 'nullable|string',
+            'maladies' => 'nullable|string',
+            'handicap' => 'nullable|string',
+            'contact_urgence' => 'nullable|string|max:255',
+            'medecin_traitant' => 'nullable|string|max:255',
+            'observations' => 'nullable|string',
+            'profession' => 'nullable|string|max:255',
         ];
     }
 

@@ -91,8 +91,9 @@
                             </thead>
                             <tbody>
                                 @foreach($topSchools as $school)
-                                    <tr>
-                                        <td style="padding: 15px;">
+                                <tr>
+                                    <td style="padding: 15px;">
+                                        <a href="{{ route('admin.ecole.show', $school->slug) }}">
                                             <div class="d-flex align-items-center">
                                                 @if($school->logo)
                                                     <img src="{{ asset('storage/' . $school->logo) }}" alt="" style="width: 35px; height: 35px; border-radius: 8px; margin-right: 12px; object-fit: cover;">
@@ -116,7 +117,8 @@
                                                 <div class="progress-bar" style="width: {{ $percent }}%; background: #667eea; border-radius: 10px;"></div>
                                             </div>
                                         </td>
-                                    </tr>
+                                </tr>
+                                </a>
                                 @endforeach
                             </tbody>
                         </table>

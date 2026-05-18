@@ -28,8 +28,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if (auth()->user()->hasRole('etudiant')) {
-            return redirect()->route('student.dashboard');
+        if (auth()->user()->hasRole('parent')) {
+            return redirect()->route('parent.dashboard');
         }
 
         return redirect()->intended(route('dashboard', absolute: false));

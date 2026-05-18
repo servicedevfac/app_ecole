@@ -22,12 +22,13 @@ use App\Http\Controllers\ParentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TypesFraisController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\StudentPortalController;
+use App\Http\Controllers\ParentPortalController;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\StudentDocumentController;
 use App\Http\Controllers\BulletinController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\PaymentController;
+// use App\Http\Controllers\ComptabiliteController;
 use App\Http\Controllers\EcolePaymentController;
 use Illuminate\Support\Facades\Route;
 
@@ -76,6 +77,7 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff|parent|Compta
     */
     Route::resource('cycles', CycleController::class)->names('admin.cycle');
     Route::resource('niveaux', NiveauController::class)->names('admin.niveau');
+    Route::get('/classes/{id}/export-students', [ClasseController::class, 'exportStudentList'])->name('admin.classe.export_students');
     Route::resource('classes', ClasseController::class)->names('admin.classe')->middleware('permission:classes.view');
     Route::resource('matieres', MatiereController::class)->names('admin.matiere');
     Route::resource('assignematiere', AssignematiereController::class)->names('admin.matiere.assignematiere');
@@ -101,6 +103,7 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff|parent|Compta
         Route::delete('/documents/{document}', [StudentDocumentController::class, 'destroy'])->name('admin.etudiant.documents.destroy');
 
         // Paramètres dynamiques à la fin pour éviter les conflits d'URLs (ex: /documents vs /{id})
+        Route::get('/{id}/fiche', [StudentController::class, 'exportFiche'])->name('admin.etudiant.fiche');
         Route::get('/{id}', [StudentController::class, 'show'])->name('admin.etudiant.show');
         Route::get('/{id}/edit', [StudentController::class, 'edit'])->name('admin.etudiant.edit');
         Route::put('/{id}', [StudentController::class, 'update'])->name('admin.etudiant.update');
@@ -127,6 +130,8 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff|parent|Compta
     */
     Route::resource('emploi_du_temps', EmploiDuTempsController::class)->names('admin.emploi_du_temps');
     Route::get('api/get-teachers-by-assignment', [EmploiDuTempsController::class, 'getTeachersByClasseAndMatiere'])->name('admin.emploi_du_temps.get_teachers');
+    Route::get('/emploi_du_temps/classe/{id}', [EmploiDuTempsController::class, 'byClasse'])->name('admin.emploi_du_temps.by_classe');
+    Route::get('/emploi_du_temps/enseignant/{id}', [EmploiDuTempsController::class, 'byTeacher'])->name('admin.emploi_du_temps.by_teacher');
     Route::get('/emploi_du_temps/classe/{id}/pdf', [EmploiDuTempsController::class, 'downloadPDFByClasse'])->name('admin.emploi_du_temps.classe_pdf');
     Route::get('/emploi_du_temps/enseignant/{id}/pdf', [EmploiDuTempsController::class, 'downloadPDFByTeacher'])->name('admin.emploi_du_temps.teacher_pdf');
 
@@ -149,12 +154,14 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff|parent|Compta
     Route::get('/bulletins/{classe}', [BulletinController::class, 'generate'])->name('admin.bulletins.generate');
     Route::get('/bulletins/{classe}/student/{student}', [BulletinController::class, 'studentBulletin'])->name('admin.bulletins.student');
     Route::get('/bulletins/{classe}/student/{student}/pdf', [BulletinController::class, 'downloadPDF'])->name('admin.bulletins.download_pdf');
+    Route::get('/bulletins/{classe}/download-all', [BulletinController::class, 'downloadAllPDFs'])->name('admin.bulletins.download_all');
 
     /*
     |--------------------------------------------------------------------------
     | FINANCES & COMPTABILITÉ
     |--------------------------------------------------------------------------
     */
+    // Route::get('/comptabilite/dashboard', [ComptabiliteController::class, 'index'])->name('admin.comptabilite.dashboard');
     Route::resource('factures', FactureController::class)->names('admin.factures')->middleware('permission:paiements.view');
     Route::resource('frais_scolaires', FraisScolaireController::class)->names('frais_scolaires');
     
@@ -181,20 +188,23 @@ Route::middleware('auth', 'role:Super Admin|admin|enseignant|staff|parent|Compta
 
     /*
     |--------------------------------------------------------------------------
-    | PORTAIL ÉLÈVE
+    | PORTAIL PARENT
     |--------------------------------------------------------------------------
     */
-    Route::middleware(['role:etudiant'])->prefix('student')->name('student.')->group(function () {
-        Route::get('/modifier-mot-de-passe', [StudentPortalController::class, 'showChangePasswordForm'])->name('password.change');
-        Route::post('/modifier-mot-de-passe', [StudentPortalController::class, 'updatePassword'])->name('password.update');
+    Route::middleware(['role:parent|Super Admin'])->prefix('parent')->name('parent.')->group(function () {
+        Route::get('/select-student/{id}', [ParentPortalController::class, 'selectStudent'])->name('select_student');
+        Route::get('/modifier-mot-de-passe', [ParentPortalController::class, 'showChangePasswordForm'])->name('password.change');
+        Route::post('/modifier-mot-de-passe', [ParentPortalController::class, 'updatePassword'])->name('password.update');
 
         Route::middleware('force.password.change')->group(function () {
-            Route::get('/dashboard', [StudentPortalController::class, 'index'])->name('dashboard');
-            Route::get('/notes', [StudentPortalController::class, 'notes'])->name('notes');
-            Route::get('/emploi-du-temps', [StudentPortalController::class, 'emploiDuTemps'])->name('emploi');
-            Route::get('/factures', [StudentPortalController::class, 'factures'])->name('factures');
-            Route::get('/documents', [StudentPortalController::class, 'documents'])->name('documents');
-            Route::get('/documents/{document}/download', [StudentPortalController::class, 'downloadDocument'])->name('documents.download');
+            Route::get('/dashboard', [ParentPortalController::class, 'index'])->name('dashboard');
+            Route::get('/notes', [ParentPortalController::class, 'notes'])->name('notes');
+            Route::get('/emploi-du-temps', [ParentPortalController::class, 'emploiDuTemps'])->name('emploi');
+            Route::get('/factures', [ParentPortalController::class, 'factures'])->name('factures');
+            Route::get('/documents', [ParentPortalController::class, 'documents'])->name('documents');
+            Route::get('/documents/{document}/download', [ParentPortalController::class, 'downloadDocument'])->name('documents.download');
+            Route::get('/presences', [ParentPortalController::class, 'presences'])->name('presences');
+            Route::get('/profil', [ParentPortalController::class, 'profile'])->name('profile');
         });
     });
 

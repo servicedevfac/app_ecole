@@ -28,7 +28,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Type *</label>
-                        <select name="type" class="select2" required>
+                        <select name="type" class="form-control" required>
                             <option value="">Sélectionner</option>
                             <option value="trimestre">Trimestre</option>
                             <option value="semestre">Semestre</option>
@@ -36,7 +36,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Année Scolaire *</label>
-                        <select name="annee_scolaire_id" class="select2" required>
+                        <select name="annee_scolaire_id" class="form-control" required>
                             <option value="">Sélectionner</option>
                             @foreach($annees as $annee)
                                 <option value="{{ $annee->id }}">{{ $annee->annee }}</option>
@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Status *</label>
-                        <select name="status" class="select2" required>
+                        <select name="status" class="form-control" required>
                             <option value="ouvert">Ouvert</option>
                             <option value="fermé">Fermé</option>
                         </select>

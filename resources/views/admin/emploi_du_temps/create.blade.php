@@ -17,15 +17,7 @@
             </div>
         </div>
 
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach($errors->all() as $err)
-                        <li>{{ $err }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+      
 
         <form class="new-added-form" method="POST" action="{{ route('admin.emploi_du_temps.store') }}">
             @csrf
@@ -43,7 +35,6 @@
                         @endisset
                     </select>
                 </div>
-
                 <div class="col-xl-3 col-lg-6 col-12 form-group">
                     <label>Classe *</label>
                     <select name="classe_id" class="select2" required id="classeSelect">

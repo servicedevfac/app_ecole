@@ -31,6 +31,20 @@ class Student extends Model
         'photo',
         'ecole_id',
         'est_affecte',
+        'lieu_naissance',
+        'nationalite',
+        'cni_extrait_numero',
+        'filiere_serie',
+        'etablissement_precedent',
+        'statut_inscription',
+        'groupe_promotion',
+        'groupe_sanguin',
+        'allergies',
+        'maladies',
+        'handicap',
+        'contact_urgence',
+        'medecin_traitant',
+        'observations',
     ];
     private function generateMatricule()
     {

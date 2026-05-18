@@ -92,9 +92,9 @@
                     </thead>
                     <tbody>
                         @foreach($ecoles as $ecole)
-                            <a href="{{ route('admin.ecole.show', $ecole->id) }}">
-                            <tr style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.02); transition: transform 0.2s;">
-                                <td style="padding: 15px 20px; border: none; border-radius: 15px 0 0 15px;">
+                        <tr style="background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.02); transition: transform 0.2s;">
+                            <td style="padding: 15px 20px; border: none; border-radius: 15px 0 0 15px;">
+                                <a href="{{ route('admin.ecole.show', $ecole) }}">
                                     @if($ecole->logo)
                                         <img src="{{ asset('storage/' . $ecole->logo) }}" alt="Logo" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover; border: 2px solid #edf2f7;">
                                     @else
@@ -102,17 +102,22 @@
                                             <i class="fas fa-image"></i>
                                         </div>
                                     @endif
-                                </td>
-                                <td style="padding: 15px 20px; border: none;">
+                                </a>
+                            </td>
+                            <td style="padding: 15px 20px; border: none;">
+                                <a href="{{ route('admin.ecole.show', $ecole) }}">
                                     <div style="font-weight: 700; color: #2d3748; font-size: 15px;">{{ $ecole->nom }}</div>
                                     <div style="font-size: 12px; color: #a0aec0;">slug: {{ $ecole->slug }}</div>
-                                </td>
-                                <td style="padding: 15px 20px; border: none;">
+                                </a>
+                            </td>
+                            <td style="padding: 15px 20px; border: none;">
+                                <a href="{{ route('admin.ecole.show', $ecole) }}">
                                     <div style="font-weight: 700; color: #2d3748;"><i class="fas fa-user-graduate mg-r-5 text-muted"></i> {{ $ecole->etudiants_count }} <small>élèves</small></div>
                                     <div style="font-size: 13px; color: #718096;"><i class="fas fa-users-cog mg-r-5 text-muted"></i> {{ $ecole->users_count }} <small>comptes</small> / {{ $ecole->enseignants_count }} <small>profs</small></div>
-                                </td>
-                                <td style="padding: 15px 20px; border: none;">
-                                    @if($ecole->is_active)
+                                </a>
+                            </td>
+                            <td style="padding: 15px 20px; border: none;">
+                                @if($ecole->is_active)
                                         <span class="badge" style="background-color: #c6f6d5; color: #22543d; padding: 6px 12px; border-radius: 8px; font-weight: 600;">
                                             <i class="fas fa-circle mg-r-5" style="font-size: 8px;"></i> Actif
                                         </span>

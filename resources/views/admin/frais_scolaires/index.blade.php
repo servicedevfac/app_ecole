@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="breadcrumbs-area">
-        <h3>Frais Scolaires</h3>
+        <h3>Configuration des Frais Scolaires</h3>
         <ul>
             <li>
                 <a href="{{ route('dashboard') }}">Accueil</a>
@@ -12,19 +12,20 @@
     </div>
 
     <div class="row">
-        <div class="col-4-xxxl col-12">
+        <!-- Formulaire d'ajout -->
+        <div class="col-xl-4 col-12">
             <div class="card height-auto">
                 <div class="card-body">
-                    <div class="heading-layout1">
+                    <div class="heading-layout1 mg-b-20">
                         <div class="item-title">
-                            <h3>Ajouter un Frais Scolaire</h3>
+                            <h3>Nouveaux Frais</h3>
                         </div>
                     </div>
                     <form class="new-added-form" method="POST" action="{{ route('frais_scolaires.store') }}">
                         @csrf
                         <div class="row">
                             <div class="col-12 form-group">
-                                <label>Niveau *</label>
+                                <label class="text-dark-medium">Niveau scolaire *</label>
                                 <select name="niveau_id" class="select2" required>
                                     <option value="" disabled selected>Choisir un niveau</option>
                                     @foreach($niveaux as $niveau)
@@ -33,7 +34,7 @@
                                 </select>
                             </div>
                             <div class="col-12 form-group">
-                                <label>Année Scolaire *</label>
+                                <label class="text-dark-medium">Année Scolaire *</label>
                                 <select name="annee_scolaire_id" class="select2" required>
                                     <option value="" disabled selected>Choisir une année</option>
                                     @foreach($annees as $annee)
@@ -43,20 +44,17 @@
                                 </select>
                             </div>
                             <div class="col-12 form-group">
-                                <label>Frais d'inscription</label>
-                                <input type="number" name="frais_inscription" class="form-control" min="0" step="0.01"
-                                    placeholder="Montant inscription">
+                                <label class="text-dark-medium">Frais d'inscription (FCFA)</label>
+                                <input type="number" name="frais_inscription" class="form-control" min="0" step="1"
+                                    placeholder="Ex: 50000">
                             </div>
                             <div class="col-12 form-group">
-                                <label>Frais de scolarité</label>
-                                <input type="number" name="frais_Scolarité" class="form-control" min="0" step="0.01"
-                                    placeholder="Montant scolarité">
+                                <label class="text-dark-medium">Frais de scolarité (FCFA)</label>
+                                <input type="number" name="frais_Scolarité" class="form-control" min="0" step="1"
+                                    placeholder="Ex: 350000">
                             </div>
-                            <div class="col-12 form-group mg-t-8">
-                                <button type="submit"
-                                    class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Enregistrer</button>
-                                <button type="reset"
-                                    class="btn-fill-lg bg-blue-dark btn-hover-yellow">Réinitialiser</button>
+                            <div class="col-12 form-group">
+                                <button type="submit" class="btn-fill-lg btn-gradient-yellow w-100">Enregistrer</button>
                             </div>
                         </div>
                     </form>
@@ -64,12 +62,13 @@
             </div>
         </div>
 
-        <div class="col-8-xxxl col-12">
+        <!-- Liste des frais -->
+        <div class="col-xl-8 col-12">
             <div class="card height-auto">
                 <div class="card-body">
-                    <div class="heading-layout1">
+                    <div class="heading-layout1 mg-b-20">
                         <div class="item-title">
-                            <h3>Liste des Frais Scolaires</h3>
+                            <h3>Grille Tarifaire</h3>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -77,20 +76,26 @@
                             <thead>
                                 <tr>
                                     <th>Niveau</th>
-                                    <th>Année</th>
-                                    <th>Frais Inscription</th>
-                                    <th>Frais Scolarité</th>
+                                    <th>Année Scolaire</th>
+                                    <th>Inscription</th>
+                                    <th>Scolarité</th>
+                                    <th>Total</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($frais as $item)
                                     <tr>
-                                        <td>{{ $item->niveau->nom ?? '-' }}</td>
-                                        <td>{{ $item->anneeScolaire->annee ?? '-' }}</td>
-                                        <td>{{ $item->frais_inscription ? number_format($item->frais_inscription, 0, ',', ' ') . ' FCFA' : '-' }}
+                                        <td class="font-weight-bold">{{ $item->niveau->nom ?? '-' }}</td>
+                                        <td>
+                                            <span class="badge {{ ($item->anneeScolaire->status ?? '') == 'actif' ? 'badge-success' : 'badge-secondary' }}">
+                                                {{ $item->anneeScolaire->annee ?? '-' }}
+                                            </span>
                                         </td>
-                                        <td>{{ $item->frais_Scolarité ? number_format($item->frais_Scolarité, 0, ',', ' ') . ' FCFA' : '-' }}
+                                        <td>{{ number_format($item->frais_inscription ?? 0, 0, ',', ' ') }}</td>
+                                        <td>{{ number_format($item->frais_Scolarité ?? 0, 0, ',', ' ') }}</td>
+                                        <td class="text-dark-pastel-green font-weight-bold">
+                                            {{ number_format(($item->frais_inscription ?? 0) + ($item->frais_Scolarité ?? 0), 0, ',', ' ') }}
                                         </td>
                                         <td>
                                             <div class="dropdown">
@@ -101,17 +106,18 @@
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     <a class="dropdown-item"
                                                         href="{{ route('frais_scolaires.edit', $item->id) }}">
-                                                        <i class="fas fa-cogs text-dark-pastel-green"></i> Modifier
+                                                        <i class="fas fa-edit text-dark-pastel-green"></i> Modifier
                                                     </a>
+                                                    @role('super admin|admin')
                                                     <form action="{{ route('frais_scolaires.destroy', $item->id) }}"
-                                                        method="POST" onsubmit="return confirm('Êtes-vous sûr ?');"
-                                                        style="display:inline;">
+                                                        method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ces frais ?');">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="dropdown-item">
-                                                            <i class="fas fa-times text-orange-red"></i> Supprimer
+                                                            <i class="fas fa-trash-alt text-orange-red"></i> Supprimer
                                                         </button>
                                                     </form>
+                                                    @endrole
                                                 </div>
                                             </div>
                                         </td>

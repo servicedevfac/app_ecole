@@ -54,12 +54,18 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Enseignant *</label>
-                        <select name="enseignant_id" id="enseignantSelect" class="select2" required>
-                            <option value="">Sélectionner</option>
-                            @foreach($enseignants as $enseignant)
-                                <option value="{{ $enseignant->id }}">{{ $enseignant->nom }} {{ $enseignant->prenom }}</option>
-                            @endforeach
-                        </select>
+                        @if(auth()->user()->enseignant)
+                            <select name="enseignant_id" class="select2" required readonly>
+                                <option value="{{ auth()->user()->enseignant->id }}">{{ auth()->user()->enseignant->nom }} {{ auth()->user()->enseignant->prenom }}</option>
+                            </select>
+                        @else
+                            <select name="enseignant_id" id="enseignantSelect" class="select2" required>
+                                <option value="">Sélectionner</option>
+                                @foreach($enseignants as $enseignant)
+                                    <option value="{{ $enseignant->id }}">{{ $enseignant->nom }} {{ $enseignant->prenom }}</option>
+                                @endforeach
+                            </select>
+                        @endif
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Type *</label>
@@ -104,6 +110,9 @@
         $('#classeSelect, #matiereSelect').on('change', function() {
             var classe_id = $('#classeSelect').val();
             var matiere_id = $('#matiereSelect').val();
+            var teacherSelect = $('#enseignantSelect');
+
+            if(teacherSelect.length === 0) return; // Si l'enseignant est déjà fixé (cas d'un enseignant connecté)
             
             if(classe_id && matiere_id) {
                 $.ajax({

@@ -10,9 +10,20 @@ class ParentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $parents = Parents::paginate(10);
+        $query = Parents::query();
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('nom', 'LIKE', "%{$search}%")
+                ->orWhere('prenom', 'LIKE', "%{$search}%")
+                ->orWhere('email', 'LIKE', "%{$search}%")
+                ->orWhere('telephone', 'LIKE', "%{$search}%");
+        }
+
+        $parents = $query->withCount('students')->paginate(10);
+
         return view('admin.parents.index', compact('parents'));
     }
 
@@ -72,7 +83,6 @@ class ParentController extends Controller
             'nom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-]+$/',
             'prenom' => 'required|string|max:255|regex:/^[a-zA-ZÀ-ÿ\s\-]+$/',
             'email' => 'required|email|unique:parents,email,'.$id.'|max:255',
-            'relation' => 'required|in:mere,pere,frere,soeur,tuteur',
             'telephone' => 'required|string|regex:/^[\+]?[0-9\-\(\)\s]+$/|max:20',
             'autre_telephone' => 'nullable|string|regex:/^[\+]?[0-9\-\(\)\s]+$/|max:20',
             'adresse' => 'required|string|max:500',
