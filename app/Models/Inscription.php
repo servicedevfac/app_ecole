@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToEcole;
+
+class Inscription extends Model
+{
+    protected $table = 'inscriptions';
+    use HasFactory, BelongsToEcole;
+     protected $fillable = [
+        'student_id',
+        'annee_scolaire_id',
+        'cycle_id',
+        'niveau_id',
+        'classe_id',
+        'status',
+        'ecole_id',
+    ];
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    public function anneeScolaire()
+    {
+        return $this->belongsTo(Annee_scolaire::class);
+    }
+
+    public function classe()
+    {
+        return $this->belongsTo(Classe::class);
+    }
+
+    public function niveau()
+    {
+        return $this->belongsTo(Niveau::class);
+    }
+
+    public function cycle()
+    {
+        return $this->belongsTo(Cycle::class);
+    }
+
+    public function factures()
+    {
+        return $this->hasMany(Facture::class);
+    }
+}

@@ -1,0 +1,53 @@
+# Audit du Projet SGS - Liste des tâches restantes
+
+## 1. Gestion des Présences (Attendance) - [MANQUANT]
+- [ ] Créer la migration, le modèle et le contrôleur pour les présences (Presence/Attendance).
+- [ ] Interface pour marquer les présences par classe et par jour/heure.
+- [ ] Rapports d'absentéisme pour les parents.
+
+## 2. Système Financier (Paiements & Facturation) - [TERMINÉ]
+- [x] Finaliser `FactureController` : Implémenter la génération automatique de factures lors de l'inscription.
+- [x] Finaliser `PaymentController` : Ajouter la logique d'enregistrement des paiements (espèces, virement, etc.).
+- [x] Mise à jour automatique du statut de la facture (Payé, Partiel, Impayé).
+- [x] Suivi des reliquats/dettes par élève.
+
+## 3. Emploi du Temps - [TERMINÉ]
+- [x] Ajouter la colonne `salle` à la table `emploi_du_temps`.
+- [x] Activer la vue par salle dans le controller.
+- [x] Préparer l'export PDF de l'emploi du temps par classe et par enseignant.
+
+## 4. Documents des Éleves - [TERMINÉ]
+- [x] Implémenter le stockage et la gestion des documents scans (acte de naissance, certificats, etc.) dans `StudentDocumentController`.
+- [x] Interface de gestion des documents par élève.
+
+## 5. Dashboard (Tableau de Bord) - [TERMINÉ]
+- [x] Ajouter des indicateurs financiers (Total encaissé, Reste à percevoir).
+- [x] Ajouter des graphiques de tendance pour les présences.
+- [x] Alertes pour les factures en retard.
+
+## 6. Classement et Bulletins (Avancé) - [TERMINÉ]
+- [x] Calcul automatique du rang des élèves dans la classe.
+- [x] Calcul de la moyenne de classe et mention (Tableau d'honneur, etc.).
+
+## 7. Audit Général - [TERMINÉ]
+- [x] Vérifier la validation des données dans tous les contrôleurs (StoreRequest/UpdateRequest).
+- [ ] Uniformiser les interfaces (Blade) avec Tailwind/CSS pour une expérience premium.
+
+
+## 8. Roadmap Transition SaaS (Multi-tenancy) - [A PLANIFIER]
+- [ ] **Architecture de Multi-location :** 
+    - Décider entre "Single Database with ecole_id" 
+- [ ] **Modification de la Base de Données :**
+    - Créer la table `ecoles` (pour stocker les informations des écoles et leurs domaines).
+    - Ajouter une colonne `ecole_id` à toutes les entités clés existant
+- [ ] **Isolement des Données :**
+    - Implémenter des Global Scopes sur les modèles pour filtrer par `ecole_id` automatiquement.
+- [ ] **Gestion des Domaines :**
+    - Configurer la détection dynamique d'une ecole  via sous-domaine (ex: ecole1.sgs.com).
+- [ ] **Système d'Abonnement (Monétisation) :**
+    - Intégrer `Laravel Cashier (Stripe)` pour les abonnements B2B des écoles.
+    - Gérer les limites de ressources par plan (ex: Max 500 élèves pour le Plan Basic).
+- [ ] **Dashboard Super Admin :**
+    - Créer une interface pour gérer les instances d'écoles, voir les factures d'abonnement et suspendre des accès.
+- [ ] **Migration des fichiers :**
+    - Adapter les disques de stockage pour séparer les uploads par dossier tenant.

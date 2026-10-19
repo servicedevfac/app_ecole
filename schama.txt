@@ -1,0 +1,313 @@
+SCHEMA DE LA BASE DE DONNEES (d'après les migrations Laravel)
+
+============================================================
+1) TABLE users
+------------------------------------------------------------
+id BIGINT UNSIGNED AI PK
+name VARCHAR(255) NOT NULL
+email VARCHAR(255) UNIQUE NOT NULL
+email_verified_at TIMESTAMP NULL
+password VARCHAR(255) NOT NULL
+remember_token VARCHAR(100) NULL
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+TABLE password_reset_tokens
+email VARCHAR(255) PK
+token VARCHAR(255) NOT NULL
+created_at TIMESTAMP NULL
+
+TABLE sessions
+id VARCHAR(255) PK
+user_id BIGINT UNSIGNED NULL INDEX  -> FK vers users.id (optionnel)
+ip_address VARCHAR(45) NULL
+user_agent TEXT NULL
+payload LONGTEXT NOT NULL
+last_activity INT NOT NULL INDEX
+
+============================================================
+2) TABLES cache / jobs (techniques Laravel)
+------------------------------------------------------------
+TABLE cache
+key VARCHAR(255) PK
+value MEDIUMTEXT NOT NULL
+expiration INT NOT NULL
+
+TABLE cache_locks
+key VARCHAR(255) PK
+owner VARCHAR(255) NOT NULL
+expiration INT NOT NULL
+
+TABLE jobs
+id BIGINT UNSIGNED AI PK
+queue VARCHAR(255) INDEX
+payload LONGTEXT
+attempts TINYINT UNSIGNED
+reserved_at INT UNSIGNED NULL
+available_at INT UNSIGNED
+created_at INT UNSIGNED
+
+TABLE job_batches
+id VARCHAR(255) PK
+name VARCHAR(255)
+total_jobs INT
+pending_jobs INT
+failed_jobs INT
+failed_job_ids LONGTEXT
+options MEDIUMTEXT NULL
+cancelled_at INT NULL
+created_at INT
+finished_at INT NULL
+
+TABLE failed_jobs
+id BIGINT UNSIGNED AI PK
+uuid VARCHAR(255) UNIQUE
+connection TEXT
+queue TEXT
+payload LONGTEXT
+exception LONGTEXT
+failed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+============================================================
+3) TABLES permissions / rôles (package spatie/permission)
+------------------------------------------------------------
+TABLE permissions
+id BIGINT UNSIGNED AI PK
+name VARCHAR(255) NOT NULL
+guard_name VARCHAR(255) NOT NULL
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+UNIQUE(name, guard_name)
+
+TABLE roles
+id BIGINT UNSIGNED AI PK
+team_foreign_key BIGINT UNSIGNED NULL (si teams activé)
+name VARCHAR(255) NOT NULL
+guard_name VARCHAR(255) NOT NULL
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+UNIQUE(name, guard_name) ou UNIQUE(team_foreign_key, name, guard_name) selon config
+
+TABLE model_has_permissions
+permission_id BIGINT UNSIGNED FK -> permissions.id
+model_type VARCHAR(255)
+model_id BIGINT UNSIGNED
+team_foreign_key BIGINT UNSIGNED NULL (si teams)
+PRIMARY KEY( [team_foreign_key,] permission_id, model_id, model_type )
+
+TABLE model_has_roles
+role_id BIGINT UNSIGNED FK -> roles.id
+model_type VARCHAR(255)
+model_id BIGINT UNSIGNED
+team_foreign_key BIGINT UNSIGNED NULL (si teams)
+PRIMARY KEY( [team_foreign_key,] role_id, model_id, model_type )
+
+TABLE role_has_permissions
+permission_id BIGINT UNSIGNED FK -> permissions.id
+role_id BIGINT UNSIGNED FK -> roles.id
+PRIMARY KEY(permission_id, role_id)
+
+============================================================
+4) TABLE students
+------------------------------------------------------------
+TABLE students
+id BIGINT UNSIGNED AI PK
+matricule VARCHAR(255) UNIQUE NOT NULL
+nom VARCHAR(255) NOT NULL
+prenom VARCHAR(255) NOT NULL
+sexe ENUM('M','F') NULL
+date_naissance DATE NULL
+email VARCHAR(255) UNIQUE NULL
+phone VARCHAR(255) NULL
+address TEXT NULL
+photo VARCHAR(255) NULL
+status VARCHAR(255) DEFAULT 'active'
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+============================================================
+5) TABLE cycles / niveaux / classes
+------------------------------------------------------------
+TABLE cycles
+id BIGINT UNSIGNED AI PK
+nom VARCHAR(255) NOT NULL
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+TABLE niveaux
+id BIGINT UNSIGNED AI PK
+nom VARCHAR(255) NOT NULL
+cycle_id BIGINT UNSIGNED FK -> cycles.id
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+TABLE classes
+id BIGINT UNSIGNED AI PK
+nom VARCHAR(255) NOT NULL
+niveau_id BIGINT UNSIGNED FK -> niveaux.id
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+============================================================
+6) TABLE annee_scolaires
+------------------------------------------------------------
+TABLE annee_scolaires
+id BIGINT UNSIGNED AI PK
+annee VARCHAR(255) NOT NULL
+date_debut DATE NOT NULL
+date_fin DATE NOT NULL
+status VARCHAR(255) DEFAULT 'active'
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+(Note: définie deux fois dans les migrations, même structure)
+
+============================================================
+7) TABLE parents et relations parent–élève
+------------------------------------------------------------
+TABLE parents
+id BIGINT UNSIGNED AI PK
+nom VARCHAR(255) NOT NULL
+prenom VARCHAR(255) NOT NULL
+email VARCHAR(255) UNIQUE NOT NULL
+telephone VARCHAR(255) NOT NULL
+autre_telephone VARCHAR(255) NULL
+adresse VARCHAR(255) NOT NULL
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+TABLE relations
+id BIGINT UNSIGNED AI PK
+parent_id BIGINT UNSIGNED FK -> parents.id ON DELETE CASCADE
+student_id BIGINT UNSIGNED FK -> students.id ON DELETE CASCADE
+relation VARCHAR(255) NOT NULL  (père, mère, tuteur, ...)
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+============================================================
+8) TABLE inscriptions (inscription scolaire)
+------------------------------------------------------------
+TABLE inscriptions
+id BIGINT UNSIGNED AI PK
+student_id BIGINT UNSIGNED FK -> students.id ON DELETE CASCADE
+annee_scolaire_id BIGINT UNSIGNED FK -> annee_scolaires.id
+cycle_id BIGINT UNSIGNED FK -> cycles.id
+niveau_id BIGINT UNSIGNED FK -> niveaux.id
+classe_id BIGINT UNSIGNED FK -> classes.id
+status ENUM('inscrite','suspendue','abandon') DEFAULT 'inscrite'
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+UNIQUE(student_id, annee_scolaire_id)  // un élève ne peut être inscrit qu'une fois par année scolaire
+
+============================================================
+9) TABLE enseignants
+------------------------------------------------------------
+TABLE enseignants
+id BIGINT UNSIGNED AI PK
+user_id VARCHAR(255)  (lien logique vers users, pas de contrainte FK dans la migration)
+nom VARCHAR(255) NOT NULL
+prenom VARCHAR(255) NOT NULL
+telephone VARCHAR(255) NOT NULL
+email VARCHAR(255) NOT NULL
+specialite VARCHAR(255) NOT NULL
+statut VARCHAR(255) NOT NULL
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+============================================================
+10) TABLE matieres et matiere_classe
+------------------------------------------------------------
+TABLE matieres
+id BIGINT UNSIGNED AI PK
+nom VARCHAR(255) NOT NULL
+code VARCHAR(255) UNIQUE NOT NULL
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+TABLE matiere_classe
+id BIGINT UNSIGNED AI PK
+matiere_id BIGINT UNSIGNED FK -> matieres.id ON DELETE CASCADE
+classe_id BIGINT UNSIGNED FK -> classes.id ON DELETE CASCADE
+coefficient INT NOT NULL
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+============================================================
+11) TABLE affectations_pedagogiques
+------------------------------------------------------------
+TABLE affectations_pedagogiques
+id BIGINT UNSIGNED AI PK
+enseignant_id BIGINT UNSIGNED FK -> enseignants.id ON DELETE CASCADE
+matiere_id BIGINT UNSIGNED FK -> matieres.id ON DELETE CASCADE
+classe_id BIGINT UNSIGNED FK -> classes.id ON DELETE CASCADE
+annee_scolaire_id BIGINT UNSIGNED FK -> annee_scolaires.id ON DELETE CASCADE
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+UNIQUE(enseignant_id, matiere_id, classe_id, annee_scolaire_id)  AS 'unique_affectation'
+
+============================================================
+12) TABLE emploi_du_temps, jours, horaires
+------------------------------------------------------------
+TABLE jours
+id BIGINT UNSIGNED AI PK
+jours VARCHAR(255) NOT NULL
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+TABLE horaires
+id BIGINT UNSIGNED AI PK
+heure_debut TIME NOT NULL
+heure_fin TIME NOT NULL
+type ENUM('cours','pause','dejeuner') NOT NULL
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+TABLE emploi_du_temps
+id BIGINT UNSIGNED AI PK
+enseignant_id BIGINT UNSIGNED    (FK logique vers enseignants.id, non défini explicitement)
+classe_id BIGINT UNSIGNED        (FK logique vers classes.id)
+matiere_id BIGINT UNSIGNED       (FK logique vers matieres.id)
+horaire_id BIGINT UNSIGNED       (FK logique vers horaires.id)
+annee_scolaire_id BIGINT UNSIGNED (FK logique vers annee_scolaires.id)
+jours_id BIGINT UNSIGNED         (FK logique vers jours.id)
+INDEX(classe_id, jours_id)
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+============================================================
+13) TABLE evaluations et notes
+------------------------------------------------------------
+TABLE evaluations
+id BIGINT UNSIGNED AI PK
+classe_id BIGINT UNSIGNED FK -> classes.id ON DELETE CASCADE
+matiere_id BIGINT UNSIGNED FK -> matieres.id ON DELETE CASCADE
+enseignant_id BIGINT UNSIGNED FK -> users.id ON DELETE CASCADE
+libelle VARCHAR(255) NOT NULL
+type ENUM('Devoir','Interrogation','Examen') NOT NULL
+date_evaluation DATE NOT NULL
+coefficient DECIMAL(4,2) DEFAULT 1
+note_max TINYINT UNSIGNED DEFAULT 20
+statut ENUM('brouillon','validee') DEFAULT 'brouillon'
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+
+TABLE notes
+id BIGINT UNSIGNED AI PK
+evaluation_id BIGINT UNSIGNED FK -> evaluations.id ON DELETE CASCADE
+student_id BIGINT UNSIGNED FK -> students.id ON DELETE CASCADE
+note DECIMAL(5,2) NOT NULL
+appreciation VARCHAR(255) NULL
+created_at TIMESTAMP NULL
+updated_at TIMESTAMP NULL
+UNIQUE(evaluation_id, student_id)
+
+============================================================
+RELATIONS PRINCIPALES (vue simplifiée)
+------------------------------------------------------------
+- Student (students) 1..* Inscription (inscriptions) *..1 Annee_scolaire (annee_scolaires)
+- Cycle 1..* Niveau 1..* Classe
+- Classe *..* Matiere via matiere_classe
+- Parent *..* Student via relations
+- Enseignant *..* (Classe, Matiere, Annee) via affectations_pedagogiques
+- Evaluation appartient à (Classe, Matiere, Enseignant)
+- Note appartient à (Evaluation, Student)
+- Emploi_du_temps relie Classe, Enseignant, Matiere, Horaire, Jour, Annee_scolaire

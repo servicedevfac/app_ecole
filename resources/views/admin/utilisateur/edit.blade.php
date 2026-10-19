@@ -1,0 +1,209 @@
+@extends('layouts.app')
+@section('title', 'Modifier l\'Utilisateur')
+@section('content')
+
+    <div class="breadcrumbs-area">
+        <h3>Modifier l'Utilisateur</h3>
+        <ul>
+            <li><a href="{{ route('dashboard') }}">Accueil</a></li>
+            <li><a href="{{ route('admin.user.index') }}">Utilisateurs</a></li>
+            <li>Modifier: {{ $user->name }}</li>
+        </ul>
+    </div>
+
+    <div class="card height-auto" style="border-radius: 20px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.05); overflow: hidden;">
+        <div class="card-header bg-white pt-4 pb-0 px-4 border-0">
+            <div class="d-flex align-items-center" style="gap: 15px;">
+                <!-- Avatar -->
+                <div style="width: 55px; height: 55px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display:flex; align-items:center; justify-content:center; color:#fff; font-size:22px; font-weight:800; flex-shrink:0;">
+                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                </div>
+                <div>
+                    <h4 style="font-weight: 700; color: #2d3748; margin-bottom: 2px;">
+                        <i class="fas fa-user-edit mr-2" style="color: #667eea;"></i> {{ $user->name }}
+                    </h4>
+                    <p style="color: #a0aec0; font-size: 13px; margin: 0;">{{ $user->email }} &bull; Créé le {{ $user->created_at->format('d/m/Y') }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-4">
+
+            @if ($errors->any())
+                <div class="alert alert-danger" style="border-radius: 12px; border: none; background: #fff5f5; border-left: 4px solid #fc8181; padding: 15px 20px;">
+                    <strong><i class="fas fa-exclamation-circle mr-2"></i>Erreurs de validation :</strong>
+                    <ul class="mb-0 mt-2 pl-3">
+                        @foreach ($errors->all() as $error)
+                            <li style="font-size: 14px;">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ route('admin.user.update', $user->id) }}" method="POST" class="new-added-form">
+                @csrf
+                @method('PUT')
+
+                <!-- Section : Identité -->
+                <div class="mb-4 pb-3" style="border-bottom: 1px solid #edf2f7;">
+                    <h6 style="text-transform: uppercase; font-size: 11px; letter-spacing: 1.5px; font-weight: 700; color: #718096; margin-bottom: 20px;">
+                        <i class="fas fa-id-card mr-2"></i> Identité
+                    </h6>
+                    <div class="row gutters-20">
+                        <div class="col-xl-6 col-lg-6 col-12 form-group">
+                            <label style="font-weight: 600; color: #4a5568; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Nom complet <span class="text-danger">*</span></label>
+                            <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}"
+                                class="form-control" required
+                                style="border-radius: 10px; border: 1px solid #edf2f7; padding: 12px 15px;">
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-12 form-group">
+                            <label style="font-weight: 600; color: #4a5568; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Adresse Email <span class="text-danger">*</span></label>
+                            <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}"
+                                class="form-control" required
+                                style="border-radius: 10px; border: 1px solid #edf2f7; padding: 12px 15px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section : Sécurité -->
+                <div class="mb-4 pb-3" style="border-bottom: 1px solid #edf2f7;">
+                    <h6 style="text-transform: uppercase; font-size: 11px; letter-spacing: 1.5px; font-weight: 700; color: #718096; margin-bottom: 5px;">
+                        <i class="fas fa-lock mr-2"></i> Mot de passe
+                    </h6>
+                    <p style="font-size: 12px; color: #a0aec0; margin-bottom: 18px;"><i class="fas fa-info-circle mr-1"></i> Laisser vide pour conserver le mot de passe actuel.</p>
+                    <div class="row gutters-20">
+                        <div class="col-xl-6 col-lg-6 col-12 form-group">
+                            <label style="font-weight: 600; color: #4a5568; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Nouveau mot de passe</label>
+                            <div style="position: relative;">
+                                <input type="password" name="password" id="password"
+                                    class="form-control" placeholder="Laissez vide pour ne pas changer"
+                                    style="border-radius: 10px; border: 1px solid #edf2f7; padding: 12px 45px 12px 15px;">
+                                <button type="button" onclick="togglePassword('password','eye1')" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:#a0aec0; cursor:pointer;">
+                                    <i class="fas fa-eye" id="eye1"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-12 form-group">
+                            <label style="font-weight: 600; color: #4a5568; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Confirmer le mot de passe</label>
+                            <div style="position: relative;">
+                                <input type="password" name="password_confirmation" id="password_confirmation"
+                                    class="form-control" placeholder="Répéter le nouveau mot de passe"
+                                    style="border-radius: 10px; border: 1px solid #edf2f7; padding: 12px 45px 12px 15px;">
+                                <button type="button" onclick="togglePassword('password_confirmation','eye2')" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:#a0aec0; cursor:pointer;">
+                                    <i class="fas fa-eye" id="eye2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section : Rôle & École -->
+                <div class="mb-4">
+                    <h6 style="text-transform: uppercase; font-size: 11px; letter-spacing: 1.5px; font-weight: 700; color: #718096; margin-bottom: 20px;">
+                        <i class="fas fa-shield-alt mr-2"></i> Rôle & Affectation
+                    </h6>
+                    <div class="row gutters-20">
+                        <div class="col-xl-6 col-lg-6 col-12 form-group">
+                            <label style="font-weight: 600; color: #4a5568; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Rôle <span class="text-danger">*</span></label>
+                            <select name="role_id" id="role_id" class="form-control" required onchange="toggleEcoleField()"
+                                style="border-radius: 10px; border: 1px solid #edf2f7; padding: 10px 15px;">
+                                <option value="">— Choisir un rôle —</option>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->id }}" data-name="{{ $role->name }}"
+                                        {{ $user->hasRole($role->name) ? 'selected' : '' }}>
+                                        {{ $role->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-xl-6 col-lg-6 col-12 form-group" id="ecole_field">
+                            <label style="font-weight: 600; color: #4a5568; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Établissement <span id="ecole_required_star" class="text-danger">*</span>
+                            </label>
+                            <select name="ecole_id" id="ecole_id" class="form-control select2"
+                                style="border-radius: 10px; border: 1px solid #edf2f7; padding: 10px 15px;">
+                                <option value="">— Choisir un établissement —</option>
+                                @foreach($ecoles as $ecole)
+                                    <option value="{{ $ecole->id }}" {{ old('ecole_id', $user->ecole_id) == $ecole->id ? 'selected' : '' }}>
+                                        {{ $ecole->nom }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted" style="font-size: 12px; margin-top: 5px; display: block;">
+                                <i class="fas fa-info-circle mr-1"></i> Obligatoire pour tous les rôles sauf Super Admin.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boutons -->
+                <div class="d-flex justify-content-between align-items-center pt-3" style="border-top: 1px solid #edf2f7;">
+                    <a href="{{ route('admin.user.show', $user->id) }}" style="color: #667eea; font-size: 14px; font-weight: 600;">
+                        <i class="fas fa-eye mr-1"></i> Voir le profil
+                    </a>
+                    <div style="display: flex; gap: 12px;">
+                        <a href="{{ route('admin.user.index') }}" class="btn-fill-lg bg-blue-dark btn-hover-yellow" style="border-radius: 12px; font-weight: 600;">
+                            <i class="fas fa-arrow-left mr-1"></i> Retour
+                        </a>
+                        <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark" style="border-radius: 12px; font-weight: 700; box-shadow: 0 5px 15px rgba(255,174,0,0.3);">
+                            <i class="fas fa-save mr-1"></i> Enregistrer les modifications
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .form-control:focus {
+            border-color: #667eea !important;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.15) !important;
+        }
+    </style>
+
+    @push('scripts')
+    <script>
+        function toggleEcoleField() {
+            const roleSelect = document.getElementById('role_id');
+            const selectedOption = roleSelect.options[roleSelect.selectedIndex];
+            const roleName = selectedOption.getAttribute('data-name');
+            const ecoleField = document.getElementById('ecole_field');
+            const ecoleSelect = document.getElementById('ecole_id');
+            const star = document.getElementById('ecole_required_star');
+
+            if (roleName === 'Super Admin') {
+                ecoleField.style.opacity = '0.4';
+                ecoleField.style.pointerEvents = 'none';
+                ecoleSelect.required = false;
+                if (star) star.style.display = 'none';
+            } else {
+                ecoleField.style.opacity = '1';
+                ecoleField.style.pointerEvents = 'auto';
+                ecoleSelect.required = true;
+                if (star) star.style.display = 'inline';
+            }
+        }
+
+        function togglePassword(inputId, eyeId) {
+            const input = document.getElementById(inputId);
+            const eye = document.getElementById(eyeId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                eye.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                eye.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleEcoleField();
+
+            if (typeof $.fn.select2 !== 'undefined') {
+                $('#ecole_id').select2({ placeholder: '— Choisir un établissement —', allowClear: true });
+            }
+        });
+    </script>
+    @endpush
+
+@endsection
