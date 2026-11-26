@@ -2378,15 +2378,17 @@ ul {
 .header-main-menu .navbar-nav .header-admin .navbar-nav-link:after {
   color: #999898;
   position: absolute;
-  top: 8px;
-  right: 47px;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
   margin: 0;
 }
 
 @media only screen and (max-width: 767px) {
   .header-main-menu .navbar-nav .header-admin .navbar-nav-link:after {
-    top: 25px;
+    top: 50%;
     right: 10px;
+    transform: translateY(-50%);
   }
 }
 
