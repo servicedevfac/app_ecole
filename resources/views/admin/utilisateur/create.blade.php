@@ -67,7 +67,7 @@
                                 <input type="password" name="password" id="password"
                                     class="form-control" placeholder="Min. 8 caractères" required
                                     style="border-radius: 10px; border: 1px solid #edf2f7; padding: 12px 45px 12px 15px;">
-                                <button type="button" onclick="togglePassword('password', 'eye1')" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:#a0aec0; cursor:pointer;">
+                                <button type="button" class="toggle-password-btn" onclick="togglePassword('password', 'eye1')">
                                     <i class="fas fa-eye" id="eye1"></i>
                                 </button>
                             </div>
@@ -78,7 +78,7 @@
                                 <input type="password" name="password_confirmation" id="password_confirmation"
                                     class="form-control" placeholder="Répéter le mot de passe" required
                                     style="border-radius: 10px; border: 1px solid #edf2f7; padding: 12px 45px 12px 15px;">
-                                <button type="button" onclick="togglePassword('password_confirmation', 'eye2')" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:#a0aec0; cursor:pointer;">
+                                <button type="button" class="toggle-password-btn" onclick="togglePassword('password_confirmation', 'eye2')">
                                     <i class="fas fa-eye" id="eye2"></i>
                                 </button>
                             </div>
@@ -152,6 +152,31 @@
         .form-control:focus {
             border-color: #667eea !important;
             box-shadow: 0 0 0 3px rgba(102,126,234,0.15) !important;
+        }
+        .new-added-form .form-group .toggle-password-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #718096;
+            cursor: pointer;
+            padding: 0 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        .new-added-form .form-group .toggle-password-btn:focus {
+            outline: none;
+        }
+        .new-added-form .form-group .toggle-password-btn i {
+            position: static !important;
+            top: auto !important;
+            right: auto !important;
+            color: inherit !important;
+            font-size: 16px;
         }
     </style>
 

@@ -10,7 +10,7 @@
                     <h3>Rôles</h3>
                     <ul>
                         <li>
-                            <a href="index.html">Home</a>
+                            <a href="{{ route('dashboard') }}">Home</a>
                         </li>
                         <li>Tous les rôles</li>
                     </ul>
@@ -31,22 +31,7 @@
                             </div>
                             @endcan
                         </div>
-                        <form class="mg-b-20">
-                            <div class="row gutters-8">
-                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                                    <input type="text" placeholder="Search by ID ..." class="form-control">
-                                </div>
-                                <div class="col-4-xxxl col-xl-4 col-lg-3 col-12 form-group">
-                                    <input type="text" placeholder="Search by Name ..." class="form-control">
-                                </div>
-                                <div class="col-4-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                                    <input type="text" placeholder="Search by Class ..." class="form-control">
-                                </div>
-                                <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
-                                    <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
-                                </div>
-                            </div>
-                        </form>
+                       
                         <div class="table-responsive">
                             <table class="table display data-table text-nowrap">
                                 <thead>
@@ -77,20 +62,26 @@
                                                     <span class="flaticon-more-button-of-three-dots"></span>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="{{ route('admin.role.show', $role->id) }}"><i class="fas fa-eye text-blue"></i>Voir</a>
+            
                                                     @can('utilisateurs.update')
-                                                    <a class="dropdown-item" href="{{ route('admin.role.permissions', $role->id) }}"><i class="fas fa-key text-orange-peel"></i>Permissions</a>
-                                                    <a class="dropdown-item" href="{{ route('admin.role.edit', $role->id) }}"><i class="fas fa-edit text-green"></i>Modifier</a>
+                                                    @if ($role->name != 'Super Admin')
+                                                    <a class="dropdown-item" href="{{ route('admin.role.permissions', $role->id) }}"><i class="fas fa-key text-orange-peel"></i> Permissions</a>
+                                                    @endif
+                                                    @if (!in_array($role->name, ['Utilisateur', 'Super Admin'])) {{-- pas modifier les roles Utilisateur et Super Admin --}}
+                                                    <a class="dropdown-item" href="{{ route('admin.role.edit', $role->id) }}"><i class="fas fa-edit text-green"></i>  Modifier</a>
+                                                    @endif
                                                     @endcan
+                                                    @if ($role->name != 'Super Admin') {{-- pas supprimer le role super admin --}}
                                                     @can('utilisateurs.delete')
                                                     <form action="{{ route('admin.role.destroy', $role->id) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="dropdown-item" onclick="return confirm('Confirmer la suppression ?');">
-                                                            <i class="fas fa-trash text-red"></i>Supprimer
+                                                            <i class="fas fa-trash text-red"></i>  Supprimer
                                                         </button>
                                                     </form>
                                                     @endcan
+                                                    @endif
                                                 </div>
                                             </div>
                                         </td>

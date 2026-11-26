@@ -82,9 +82,6 @@
                                 <h5 class="item-title">{{ Auth::user()?->name }}</h5>
                                 <span>{{ Auth::user()?->role }}</span>
                             </div>
-                            <div class="admin-img">
-                                <img src="img/figure/admin.jpg" alt="Admin">
-                            </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <div class="item-header">

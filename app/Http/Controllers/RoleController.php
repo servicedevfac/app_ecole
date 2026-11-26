@@ -59,6 +59,9 @@ class RoleController extends Controller
     {
         Gate::authorize('utilisateurs.update');
         $role = Role::findOrFail($id);
+        if ($role->name === 'Super Admin') {
+            return redirect()->route('admin.role.index')->with('error', 'Le rôle Super Admin ne peut pas être modifié.');
+        }
         return view('admin.role.edit', compact('role'));
     }
 
@@ -69,6 +72,9 @@ class RoleController extends Controller
     {
         Gate::authorize('utilisateurs.update');
         $role = Role::findOrFail($id);
+        if ($role->name === 'Super Admin') {
+            return redirect()->route('admin.role.index')->with('error', 'Le rôle Super Admin ne peut pas être modifié.');
+        }
         $request->validate([
             'name' => 'required',
         ]);
@@ -84,6 +90,9 @@ class RoleController extends Controller
     {
         Gate::authorize('utilisateurs.delete');
         $role = Role::findOrFail($id);
+        if ($role->name === 'Super Admin') {
+            return redirect()->route('admin.role.index')->with('error', 'Le rôle Super Admin ne peut pas être supprimé.');
+        }
         $role->delete();
         return redirect()->route('admin.role.index')->with('success', 'Role supprime avec succes');
     }
@@ -94,6 +103,9 @@ class RoleController extends Controller
     public function permissions(Role $role)
     {
         Gate::authorize('utilisateurs.update');
+        if ($role->name === 'Super Admin') {
+            return redirect()->route('admin.role.index')->with('error', 'Les permissions du rôle Super Admin ne peuvent pas être modifiées.');
+        }
         $permissions = Permission::all();
         $rolePermissions = $role->permissions->pluck('id')->toArray();
         return view('admin.role.permissions', compact('role', 'permissions', 'rolePermissions'));
@@ -105,6 +117,9 @@ class RoleController extends Controller
     public function updatePermissions(Request $request, Role $role)
     {
         Gate::authorize('utilisateurs.update');
+        if ($role->name === 'Super Admin') {
+            return redirect()->route('admin.role.index')->with('error', 'Les permissions du rôle Super Admin ne peuvent pas être modifiées.');
+        }
         $role->syncPermissions($request->permissions);
         return redirect()->route('admin.role.index')->with('success', 'Permissions mises a jour avec succes');
     }

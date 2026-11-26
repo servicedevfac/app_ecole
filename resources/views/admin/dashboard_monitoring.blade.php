@@ -4,65 +4,53 @@
 
     <!-- Breadcrumbs Area Start Here -->
     <div class="breadcrumbs-area">
-        <h3 style="font-weight: 800; color: #2d3748;">Oversight Plateforme (Monitoring)</h3>
+        <h3 style="font-weight: 800; color: #2d3748;">Tableau de bord</h3>
         <ul>
             <li><a href="{{ route('dashboard') }}">Accueil</a></li>
-            <li>Monitoring Global</li>
+            <li>Tableau de bord</li>
         </ul>
     </div>
 
     <!-- Global Key Metrics -->
     <div class="row gutters-20">
-        <div class="col-xl-3 col-sm-6 col-12">
-            <div class="dashboard-summery-one mg-b-20" style="border-top: 4px solid #667eea; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-                <div class="row align-items-center">
-                    <div class="col-6">
-                        <div class="item-icon" style="background: linear-gradient(135deg, #667eea, #764ba2); width: 70px; height: 70px; border-radius: 12px;">
-                            <i class="fas fa-school text-white" style="font-size: 28px;"></i>
-                        </div>
+        <div class="col-xl-4 col-lg-4 col-md-6 col-12 mg-b-20">
+            <div class="dashboard-summery-one h-100 mb-0 d-flex align-items-center" style="border-top: 4px solid #667eea; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); background: #fff; padding: 24px;">
+                <div class="d-flex align-items-center justify-content-between w-100">
+                    <div class="item-icon d-flex align-items-center justify-content-center flex-shrink-0" style="background: linear-gradient(135deg, #667eea, #764ba2); width: 65px; height: 65px; border-radius: 12px;">
+                        <i class="fas fa-school text-white" style="font-size: 26px;"></i>
                     </div>
-                    <div class="col-6 text-right">
-                        <div class="item-content">
-                            <h6 class="text-uppercase mb-0" style="font-size: 11px; color: #777; letter-spacing: 1px;">Établissements</h6>
-                            <h2 class="font-weight-bold mb-0" style="font-size: 32px; color: #2d3748;">{{ $totalSchools }}</h2>
-                            <small class="text-success"><i class="fas fa-arrow-up"></i> {{ $newSchoolsCount }} ce mois</small>
-                        </div>
+                    <div class="item-content text-right ml-3" style="min-width: 0;">
+                        <h6 class="text-uppercase mb-1" style="font-size: 11px; color: #777; letter-spacing: 1px;">Établissements</h6>
+                        <h2 class="font-weight-bold mb-1" style="font-size: 28px; color: #2d3748; line-height: 1.2;">{{ number_format($totalSchools, 0, ',', ' ') }}</h2>
+                        <small class="text-success d-block"><i class="fas fa-arrow-up"></i> {{ $newSchoolsCount }} ce mois</small>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-            <div class="dashboard-summery-one mg-b-20" style="border-top: 4px solid #4facfe; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-                <div class="row align-items-center">
-                    <div class="col-6">
-                        <div class="item-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe); width: 70px; height: 70px; border-radius: 12px;">
-                            <i class="fas fa-user-graduate text-white" style="font-size: 28px;"></i>
-                        </div>
+        <div class="col-xl-4 col-lg-4 col-md-6 col-12 mg-b-20">
+            <div class="dashboard-summery-one h-100 mb-0 d-flex align-items-center" style="border-top: 4px solid #4facfe; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); background: #fff; padding: 24px;">
+                <div class="d-flex align-items-center justify-content-between w-100">
+                    <div class="item-icon d-flex align-items-center justify-content-center flex-shrink-0" style="background: linear-gradient(135deg, #4facfe, #00f2fe); width: 65px; height: 65px; border-radius: 12px;">
+                        <i class="fas fa-user-graduate text-white" style="font-size: 26px;"></i>
                     </div>
-                    <div class="col-6 text-right">
-                        <div class="item-content">
-                            <h6 class="text-uppercase mb-0" style="font-size: 11px; color: #777; letter-spacing: 1px;">Total Éleves</h6>
-                            <h2 class="font-weight-bold mb-0" style="font-size: 32px; color: #2d3748;">{{ number_format($totalStudentsCount) }}</h2>
-                            <small class="text-muted">Global plateforme</small>
-                        </div>
+                    <div class="item-content text-right ml-3" style="min-width: 0;">
+                        <h6 class="text-uppercase mb-1" style="font-size: 11px; color: #777; letter-spacing: 1px;">Total Élèves</h6>
+                        <h2 class="font-weight-bold mb-1" style="font-size: 28px; color: #2d3748; line-height: 1.2;">{{ number_format($totalStudentsCount, 0, ',', ' ') }}</h2>
+                        <small class="text-muted d-block">Global plateforme</small>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-6 col-sm-12 col-12">
-            <div class="dashboard-summery-one mg-b-20" style="border-top: 4px solid #43e97b; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); background: #fff;">
-                <div class="row align-items-center">
-                    <div class="col-4">
-                        <div class="item-icon" style="background: linear-gradient(135deg, #43e97b, #38f9d7); width: 70px; height: 70px; border-radius: 12px;">
-                            <i class="fas fa-file-invoice-dollar text-white" style="font-size: 28px;"></i>
-                        </div>
+        <div class="col-xl-4 col-lg-4 col-md-12 col-12 mg-b-20">
+            <div class="dashboard-summery-one h-100 mb-0 d-flex align-items-center" style="border-top: 4px solid #43e97b; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); background: #fff; padding: 24px;">
+                <div class="d-flex align-items-center justify-content-between w-100">
+                    <div class="item-icon d-flex align-items-center justify-content-center flex-shrink-0" style="background: linear-gradient(135deg, #43e97b, #38f9d7); width: 65px; height: 65px; border-radius: 12px;">
+                        <i class="fas fa-file-invoice-dollar text-white" style="font-size: 26px;"></i>
                     </div>
-                    <div class="col-8 text-right">
-                        <div class="item-content">
-                            <h6 class="text-uppercase mb-0" style="font-size: 11px; color: #777; letter-spacing: 1px;">Revenu Plateforme</h6>
-                            <h2 class="font-weight-bold mb-0" style="font-size: 32px; color: #2d3748;">{{ number_format($platformRevenue, 0, ',', ' ') }} <small style="font-size: 14px;">FCFA</small></h2>
-                            <small class="text-muted"><a href="{{ route('admin.ecole_payments.index') }}" style="color: #43e97b;">Voir le détail des règlements</a></small>
-                        </div>
+                    <div class="item-content text-right ml-3" style="min-width: 0;">
+                        <h6 class="text-uppercase mb-1" style="font-size: 11px; color: #777; letter-spacing: 1px;">Revenu Plateforme</h6>
+                        <h2 class="font-weight-bold mb-1" style="font-size: 28px; color: #2d3748; line-height: 1.2;">{{ number_format($platformRevenue, 0, ',', ' ') }} <small style="font-size: 14px; font-weight: 600;">FCFA</small></h2>
+                        <small class="text-muted d-block"><a href="{{ route('admin.ecole_payments.index') }}" style="color: #43e97b;">Voir le détail des règlements</a></small>
                     </div>
                 </div>
             </div>
