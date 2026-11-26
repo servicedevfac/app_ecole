@@ -27,7 +27,7 @@
                             <div class="card dashboard-card-two pd-b-20 text-center">
                                 <div class="card-body">
                                     <div class="item-img mb-3" style="width: 100px; height: 100px; margin: 0 auto;">
-                                        <img src="{{ $student->photo ? asset('storage/'.$student->photo) : url('img/figure/student.png') }}" alt="student" class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;">
+                                        <img src="{{ $student->photo ? Storage::disk('public')->url($student->photo) : url('img/figure/student.png') }}" alt="student" class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;">
                                     </div>
                                     <div class="item-content">
                                         <h4 class="item-title">{{ $student->nom }} {{ $student->prenom }}</h4>

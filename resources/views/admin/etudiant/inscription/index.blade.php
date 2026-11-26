@@ -73,7 +73,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="avatar-sm mr-3">
                                     @if($inscription->student && $inscription->student->photo)
-                                        <img src="{{ asset('storage/' . $inscription->student->photo) }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                        <img src="{{ Storage::disk('public')->url($inscription->student->photo) }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
                                     @else
                                         <div class="rounded-circle d-flex align-items-center justify-content-center text-white font-weight-bold" 
                                              style="width: 40px; height: 40px; background: linear-gradient(45deg, #3f51b5, #5c6bc0);">

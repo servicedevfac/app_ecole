@@ -96,7 +96,7 @@
                             <td style="padding: 15px 20px; border: none; border-radius: 15px 0 0 15px;">
                                 <a href="{{ route('admin.ecole.show', $ecole) }}">
                                     @if($ecole->logo)
-                                        <img src="{{ asset('storage/' . $ecole->logo) }}" alt="Logo" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover; border: 2px solid #edf2f7;">
+                                        <img src="{{ Storage::disk('public')->url($ecole->logo) }}" alt="Logo" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover; border: 2px solid #edf2f7;">
                                     @else
                                         <div style="width: 50px; height: 50px; border-radius: 10px; background: #edf2f7; display: flex; align-items: center; justify-content: center; color: #a0aec0; font-size: 20px; border: 1px dashed #cbd5e0;">
                                             <i class="fas fa-image"></i>

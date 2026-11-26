@@ -1,5 +1,30 @@
 <?php
 
+$cloudPublicDisk = null;
+$cloudDiskConfig = env('LARAVEL_CLOUD_DISK_CONFIG');
+if ($cloudDiskConfig) {
+    $cloudDisks = json_decode($cloudDiskConfig, true);
+    if (is_array($cloudDisks)) {
+        foreach ($cloudDisks as $disk) {
+            if (($disk['disk'] ?? null) === 'public') {
+                $cloudPublicDisk = [
+                    'driver' => 's3',
+                    'key' => $disk['access_key_id'] ?? null,
+                    'secret' => $disk['access_key_secret'] ?? null,
+                    'region' => $disk['default_region'] ?? 'auto',
+                    'bucket' => $disk['bucket'] ?? null,
+                    'url' => $disk['url'] ?? null,
+                    'endpoint' => $disk['endpoint'] ?? null,
+                    'use_path_style_endpoint' => $disk['use_path_style_endpoint'] ?? false,
+                    'visibility' => 'public',
+                    'throw' => false,
+                    'report' => false,
+                ];
+            }
+        }
+    }
+}
+
 return [
 
     /*
@@ -38,7 +63,7 @@ return [
             'report' => false,
         ],
 
-        'public' => [
+        'public' => $cloudPublicDisk ?? [
             'driver' => 'local',
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',

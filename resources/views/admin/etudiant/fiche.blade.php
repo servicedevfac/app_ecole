@@ -37,13 +37,11 @@
     @php
         $logoBase64 = '';
         if ($ecole && $ecole->logo && Storage::disk('public')->exists($ecole->logo)) {
-            $logoPath = storage_path('app/public/' . $ecole->logo);
-            $logoBase64 = 'data:image/' . pathinfo($logoPath, PATHINFO_EXTENSION) . ';base64,' . base64_encode(file_get_contents($logoPath));
+            $logoBase64 = 'data:image/' . pathinfo($ecole->logo, PATHINFO_EXTENSION) . ';base64,' . base64_encode(Storage::disk('public')->get($ecole->logo));
         }
         $photoBase64 = '';
         if ($etudiant->photo && Storage::disk('public')->exists($etudiant->photo)) {
-            $photoPath = storage_path('app/public/' . $etudiant->photo);
-            $photoBase64 = 'data:image/' . pathinfo($photoPath, PATHINFO_EXTENSION) . ';base64,' . base64_encode(file_get_contents($photoPath));
+            $photoBase64 = 'data:image/' . pathinfo($etudiant->photo, PATHINFO_EXTENSION) . ';base64,' . base64_encode(Storage::disk('public')->get($etudiant->photo));
         }
     @endphp
 

@@ -19,7 +19,7 @@
                     <div style="height: 120px; background: linear-gradient(135deg, #667eea, #764ba2);"></div>
                     <div class="text-center" style="margin-top: -60px; padding: 0 20px 30px;">
                         @if($ecole->logo)
-                            <img src="{{ asset('storage/' . $ecole->logo) }}" alt="Logo" style="width: 120px; height: 120px; border-radius: 20px; border: 5px solid #fff; background: #fff; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+                            <img src="{{ Storage::disk('public')->url($ecole->logo) }}" alt="Logo" style="width: 120px; height: 120px; border-radius: 20px; border: 5px solid #fff; background: #fff; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
                         @else
                             <div style="width: 120px; height: 120px; border-radius: 20px; border: 5px solid #fff; background: #f7fafc; display: flex; align-items: center; justify-content: center; color: #a0aec0; font-size: 40px; margin: 0 auto; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
                                 <i class="fas fa-school"></i>

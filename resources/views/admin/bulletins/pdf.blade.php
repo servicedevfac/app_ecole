@@ -26,9 +26,8 @@
     @php
         $logoBase64 = '';
         if (isset($ecole) && $ecole->logo && Storage::disk('public')->exists($ecole->logo)) {
-            $logoPath = storage_path('app/public/' . $ecole->logo);
-            $logoData = file_get_contents($logoPath);
-            $logoBase64 = 'data:image/' . pathinfo($logoPath, PATHINFO_EXTENSION) . ';base64,' . base64_encode($logoData);
+            $logoData = Storage::disk('public')->get($ecole->logo);
+            $logoBase64 = 'data:image/' . pathinfo($ecole->logo, PATHINFO_EXTENSION) . ';base64,' . base64_encode($logoData);
         }
     @endphp
 

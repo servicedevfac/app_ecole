@@ -84,7 +84,7 @@
                                         <a href="{{ route('admin.ecole.show', $school->slug) }}">
                                             <div class="d-flex align-items-center">
                                                 @if($school->logo)
-                                                    <img src="{{ asset('storage/' . $school->logo) }}" alt="" style="width: 35px; height: 35px; border-radius: 8px; margin-right: 12px; object-fit: cover;">
+                                                    <img src="{{ Storage::disk('public')->url($school->logo) }}" alt="" style="width: 35px; height: 35px; border-radius: 8px; margin-right: 12px; object-fit: cover;">
                                                 @else
                                                     <div style="width: 35px; height: 35px; border-radius: 8px; background: #edf2f7; margin-right: 12px; display: flex; align-items: center; justify-content: center; color: #a0aec0;">
                                                         <i class="fas fa-school"></i>

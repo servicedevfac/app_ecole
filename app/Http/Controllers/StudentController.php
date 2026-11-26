@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StudentRequest;
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -215,6 +216,9 @@ class StudentController extends Controller
 
         // ✅ 3️⃣ mise à jour de la photo
         if ($request->hasFile('photo')) {
+            if ($etudiant->photo) {
+                Storage::disk('public')->delete($etudiant->photo);
+            }
             $path = $request->file('photo')->store('photos/etudiants', 'public');
             $etudiant->update(['photo' => $path]);
         }
@@ -315,6 +319,9 @@ class StudentController extends Controller
     {
         Gate::authorize('etudiants.delete');
         $etudiant = Student::findOrFail($id);
+        if ($etudiant->photo) {
+            Storage::disk('public')->delete($etudiant->photo);
+        }
         $etudiant->delete();
 
         return redirect()->route('admin.etudiant.index')->with('success', 'Eleve supprime avec succes');

@@ -18,7 +18,7 @@
             <div class="single-info-details">
                 <div class="item-img" style="position: relative; z-index: 2;">
                     @if($etudiant->photo)
-                        <img src="{{ asset('storage/' . $etudiant->photo) }}" alt="{{ $etudiant->prenom }}"
+                        <img src="{{ Storage::disk('public')->url($etudiant->photo) }}" alt="{{ $etudiant->prenom }}"
                             style="width: 140px; height: 140px; object-fit: cover; border-radius: 20px; border: 4px solid rgba(255,255,255,0.3); box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
                     @else
                         <div style="width: 140px; height: 140px; border-radius: 20px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; font-size: 48px; border: 4px solid rgba(255,255,255,0.3);">

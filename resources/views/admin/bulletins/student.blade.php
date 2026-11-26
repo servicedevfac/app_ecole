@@ -24,7 +24,7 @@
             <div class="row mb-5 pb-3 border-bottom align-items-center">
                 <div class="col-md-2 text-center text-md-left">
                     @if(isset($ecole) && $ecole->logo)
-                        <img src="{{ asset('storage/' . $ecole->logo) }}" alt="Logo École" style="max-width: 120px; max-height: 120px;">
+                        <img src="{{ Storage::disk('public')->url($ecole->logo) }}" alt="Logo École" style="max-width: 120px; max-height: 120px;">
                     @else
                         <div class="h3 text-primary font-weight-bold">SGS</div>
                     @endif
@@ -61,7 +61,7 @@
             <div class="row mb-4 border-bottom pb-3">
                 <div class="col-md-2 text-center">
                     @if($bulletin['student']->photo)
-                        <img src="{{ asset('storage/' . $bulletin['student']->photo) }}" alt="student" class="rounded-circle"
+                        <img src="{{ Storage::disk('public')->url($bulletin['student']->photo) }}" alt="student" class="rounded-circle"
                             style="width: 100px; height: 100px; object-fit: cover;">
                     @else
                         <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-secondary mx-auto"

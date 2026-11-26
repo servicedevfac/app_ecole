@@ -177,7 +177,7 @@
                                     <div class="d-flex align-items-center">
                                         <div class="avatar-sm mr-3">
                                             @if($etudiant->photo)
-                                                <img src="{{ asset('storage/' . $etudiant->photo) }}" alt="{{ $etudiant->nom }}"
+                                                <img src="{{ Storage::disk('public')->url($etudiant->photo) }}" alt="{{ $etudiant->nom }}"
                                                     style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #e8e8e8;">
                                             @else
                                                 <div class="rounded-circle d-flex align-items-center justify-content-center text-white font-weight-bold" 

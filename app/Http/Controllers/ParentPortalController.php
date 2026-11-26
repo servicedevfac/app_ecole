@@ -12,6 +12,7 @@ use App\Models\StudentDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ParentPortalController extends Controller
 {
@@ -133,7 +134,11 @@ class ParentPortalController extends Controller
             abort(403);
         }
 
-        return response()->download(storage_path('app/public/' . $document->file_path));
+        if (!Storage::disk('public')->exists($document->file_path)) {
+            return back()->with('error', 'Fichier introuvable sur le serveur.');
+        }
+
+        return Storage::disk('public')->download($document->file_path, $document->titre . '.' . $document->file_type);
     }
 
     public function presences()

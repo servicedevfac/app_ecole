@@ -191,7 +191,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3366cc; margin-bottom: 10px; padding-bottom: 8px;">
                 <div style="display: flex; align-items: center; gap: 15px;">
                     @if($ecole && $ecole->logo)
-                        <img src="{{ asset('storage/' . $ecole->logo) }}" alt="Logo" style="max-width: 60px; max-height: 60px;">
+                        <img src="{{ Storage::disk('public')->url($ecole->logo) }}" alt="Logo" style="max-width: 60px; max-height: 60px;">
                     @else
                         <div style="font-size: 24px; font-weight: bold; color: #3366cc;">SGS</div>
                     @endif

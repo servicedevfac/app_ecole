@@ -54,12 +54,11 @@ class StudentDocumentController extends Controller
      */
     public function download(StudentDocument $document)
     {
-        $path = storage_path('app/public/' . $document->file_path);
-        if (!file_exists($path)) {
+        if (!Storage::disk('public')->exists($document->file_path)) {
             return back()->with('error', 'Fichier introuvable sur le serveur.');
         }
 
-        return response()->download($path, $document->titre . '.' . $document->file_type);
+        return Storage::disk('public')->download($document->file_path, $document->titre . '.' . $document->file_type);
     }
 
     /**

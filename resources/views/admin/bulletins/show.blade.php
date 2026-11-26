@@ -114,7 +114,7 @@
                                         class="text-dark">
                                         <div class="d-flex align-items-center">
                                             @if($data['student']->photo)
-                                                <img src="{{ asset('storage/' . $data['student']->photo) }}" alt="student"
+                                                <img src="{{ Storage::disk('public')->url($data['student']->photo) }}" alt="student"
                                                     class="rounded-circle mr-2"
                                                     style="width: 30px; height: 30px; object-fit: cover;">
                                             @else

@@ -51,7 +51,7 @@
                         <div class="d-flex align-items-center flex-wrap" style="gap: 30px;">
                             <div id="logo-preview-container" style="width: 150px; height: 150px; border: 2px dashed #cbd5e0; border-radius: 20px; display: flex; align-items: center; justify-content: center; background: #f7fafc; overflow: hidden; box-shadow: inset 0 3px 6px rgba(0,0,0,0.03);">
                                 @if($ecole->logo)
-                                    <img src="{{ asset('storage/' . $ecole->logo) }}" alt="Logo actuel" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <img src="{{ Storage::disk('public')->url($ecole->logo) }}" alt="Logo actuel" style="width: 100%; height: 100%; object-fit: cover;">
                                 @else
                                     <i class="fas fa-camera text-muted" style="font-size: 32px;"></i>
                                 @endif

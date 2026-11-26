@@ -177,7 +177,7 @@
                     <div class="d-flex align-items-center p-3" style="background: #fffbeb; border-radius: 12px; border-left: 4px solid #ffae01;">
                         <div style="width: 50px; height: 50px; border-radius: 10px; background: #667eea; display:flex; align-items:center; justify-content:center; margin-right: 15px; flex-shrink:0;">
                             @if($user->ecole->logo)
-                                <img src="{{ asset('storage/' . $user->ecole->logo) }}" style="width:100%; height:100%; object-fit:cover; border-radius:10px;" alt="logo">
+                                <img src="{{ Storage::disk('public')->url($user->ecole->logo) }}" style="width:100%; height:100%; object-fit:cover; border-radius:10px;" alt="logo">
                             @else
                                 <i class="fas fa-school text-white"></i>
                             @endif

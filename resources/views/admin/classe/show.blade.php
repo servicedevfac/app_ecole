@@ -167,7 +167,7 @@
                                             <td>
                                                 <div class="avatar-circle">
                                                     @if($etudiant->photo)
-                                                        <img src="{{ url('storage/' . $etudiant->photo) }}" alt="Avatar">
+                                                        <img src="{{ Storage::disk('public')->url($etudiant->photo) }}" alt="Avatar">
                                                     @else
                                                         <span class="avatar-label">{{ strtoupper(substr($etudiant->nom, 0, 1) . substr($etudiant->prenom, 0, 1)) }}</span>
                                                     @endif

@@ -29,7 +29,7 @@
                                     <div class="card-content d-flex align-items-center p-3">
                                         <div class="item-img mr-3">
                                             @if($student->photo)
-                                                <img src="{{ url('storage/'.$student->photo) }}" alt="student" style="width: 50px; height: 50px; border-radius: 50%;">
+                                                <img src="{{ Storage::disk('public')->url($student->photo) }}" alt="student" style="width: 50px; height: 50px; border-radius: 50%;">
                                             @else
                                                 <div class="bg-light-blue p-3 rounded-circle">
                                                     <i class="fas fa-user text-blue"></i>
