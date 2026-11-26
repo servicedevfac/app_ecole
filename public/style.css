@@ -1739,7 +1739,8 @@ ul {
 
 /*=============== 5.3 Footer ==================*/
 .footer-wrap-layout1 {
-  padding: 2rem 0 4rem;
+  padding: 2rem 0 2rem;
+  margin-top: auto;
 }
 
 .copyright {
@@ -4221,6 +4222,7 @@ ul {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
+  min-height: calc(100vh - 65px);
 }
 
 .dashboard-content-one {
